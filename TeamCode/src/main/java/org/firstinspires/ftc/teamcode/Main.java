@@ -11,14 +11,30 @@ public class Main extends LinearOpMode {
     public DcMotorEx motor;
 
     public void runOpMode() throws InterruptedException {
-        motor = hardwareMap.get(DcMotorEx.class, "motor0");
-        motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        waitForStart();
 
-        motor.setTargetPosition(5 * (int) 537.6);
-        motor.setPower(0.1);
+        motor = hardwareMap.get(DcMotorEx.class, "motor0");
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        motor.setTargetPosition(50 * (int) 537.6);
+
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        print("Motor Status", "Initialized");
+
+        motor.setPower(1);
 
         while (motor.isBusy()) {
-            telemetry.addData("Motor Status", "Running...");
+            print("Motor Status", "Running...");
         }
+
+        motor.setPower(0);
+
+        print("Done", "Done");
+    }
+
+    public void print(String value, String value1) {
+        telemetry.addData(value, value1);
+        telemetry.update();
     }
 }
