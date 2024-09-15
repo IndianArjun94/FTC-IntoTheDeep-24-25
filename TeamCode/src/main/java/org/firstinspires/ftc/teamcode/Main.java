@@ -12,8 +12,11 @@ public class Main extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         motor = hardwareMap.get(DcMotor.class, "motor0");
 
-        motor.setPower(0.5);
-        sleep(5000);
-        motor.setPower(0);
+        for (int i = 0; i < 10; i++) {
+            motor.setPower(-0.5);
+            sleep(500);
+            motor.setPower(0);
+        }
+
     }
 }
