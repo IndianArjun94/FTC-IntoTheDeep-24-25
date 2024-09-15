@@ -16,6 +16,7 @@ public class Main extends LinearOpMode {
             motor.setPower(-0.5);
             sleep(500);
             motor.setPower(0);
+            sleep(500);
         }
 
     }
