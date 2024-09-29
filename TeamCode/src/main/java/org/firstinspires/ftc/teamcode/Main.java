@@ -37,6 +37,9 @@ public class Main extends OpMode {
 //        Robot Movement
         leftMotor.setPower(-leftMotorSpeed*MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         rightMotor.setPower(rightMotorSpeed*MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+
+//        Servo Rotation
+        armYawServo.setPosition(armYawServoPosition);
     }
 
     @Override
@@ -69,9 +72,6 @@ public class Main extends OpMode {
             rightMotorSpeed += gamepad1.right_stick_x;
         }
 
-        update();
-
-
 //        Robot Arm
         if (gamepad1.y) {
             armMotor.setPower(ARMROT_SPEED_CAP);
@@ -92,6 +92,8 @@ public class Main extends OpMode {
                 armYawServoPosition += 1;
             }
         }
+
+        update();
 
     }
 }
