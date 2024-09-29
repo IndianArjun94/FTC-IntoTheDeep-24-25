@@ -59,7 +59,7 @@ public class Main extends OpMode {
     @Override
     public void loop() {
 //        Robot Movement
-        if (gamepad1.left_stick_y != 0) {
+        if (gamepad1.left_stick_y != 0) { // Forward/Backward
             leftMotorSpeed = gamepad1.left_stick_y;
             rightMotorSpeed = gamepad1.left_stick_y;
         } else {
@@ -67,7 +67,7 @@ public class Main extends OpMode {
             rightMotorSpeed = 0;
         }
 
-        if (gamepad1.right_stick_x != 0) {
+        if (gamepad1.right_stick_x != 0) { // Left/Right
             leftMotorSpeed -= gamepad1.right_stick_x;
             rightMotorSpeed += gamepad1.right_stick_x;
         }
