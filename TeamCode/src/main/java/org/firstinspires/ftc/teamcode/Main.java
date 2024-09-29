@@ -39,8 +39,19 @@ public class Main extends OpMode {
 
     @Override
     public void loop() {
-        leftMotorSpeed += gamepad1.left_stick_y - gamepad1.left_stick_x;
-        rightMotorSpeed += gamepad1.left_stick_y + gamepad1.left_stick_x;
+        if (gamepad1.left_stick_y != 0) {
+            leftMotorSpeed = gamepad1.left_stick_y;
+            rightMotorSpeed = gamepad1.left_stick_y;
+        } else {
+            leftMotorSpeed = 0;
+            rightMotorSpeed = 0;
+        }
+
+        if (gamepad1.right_stick_x != 0) {
+            leftMotorSpeed += gamepad1.right_stick_x;
+            rightMotorSpeed -= gamepad1.right_stick_x;
+        }
+
         update();
     }
 }
