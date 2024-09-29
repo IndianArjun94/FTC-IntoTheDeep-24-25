@@ -83,11 +83,11 @@ public class Main extends OpMode {
 
 //        Arm Yaw Servo & Intake
 //        TODO Arm Yaw Servo
-        if (gamepad1.left_bumper) {
+        if (gamepad1.left_bumper) { // Arm Yaw Servo
             if (armYawServoPosition > -1) {
                 armYawServoPosition -= 1;
             }
-        } else if (gamepad1.right_bumper) {
+        } else if (gamepad1.right_bumper) { // Intake Servo
             if (armYawServoPosition < 1) {
                 armYawServoPosition += 1;
             }
