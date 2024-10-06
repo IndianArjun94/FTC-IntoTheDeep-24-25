@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ServoTesting", group = "Learning FTC")
-public class ServosTesting extends OpMode {
+public class ServoTest extends OpMode {
 
     private Servo intakeServo;
 
