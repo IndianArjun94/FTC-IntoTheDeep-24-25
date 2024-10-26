@@ -48,6 +48,10 @@ public class Auton_1 extends LinearOpMode {
         intakeServo.setPower(-1.0);
         sleep(500);
         intakeServo.setPower(0);
+ 
+        arm.setPower(-0.3);
+        sleep(500);
+        arm.setPower(0);
 
 
     }
