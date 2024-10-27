@@ -29,23 +29,20 @@ public class ServoTest extends OpMode {
 
         position = Math.max(0.0, Math.min(position, 1.0));
 
-        if(gamepad1.left_bumper){
+        if (gamepad1.left_bumper) {
             intakeServo.setPower(-1.0);
-        }
-        else if(gamepad1.right_bumper){
+        } else if (gamepad1.right_bumper) {
             intakeServo.setPower(1.0);
-        }
-        else if(gamepad1.left_trigger != 0.0){
+        } else if (gamepad1.left_trigger != 0.0) {
             position += 0.01;
             armServo.setPosition(position);
 
-        }
-        else if(gamepad1.right_trigger != 0.0){
+        } else if (gamepad1.right_trigger != 0.0) {
             position -= 0.01;
             armServo.setPosition(position);
 
-        }
-        else{
+
+        } else {
             intakeServo.setPower(0);
         }
     }
