@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name ="Autonomous_Official_0.5", group ="Learning FTC")
+@Autonomous(name ="Autonomous_Official_1", group ="Learning FTC")
 //@Disabled
 public class Auton_1 extends LinearOpMode {
 //    hi this is arjun's edit
@@ -53,16 +53,36 @@ public class Auton_1 extends LinearOpMode {
         sleep(2000);
         arm.setPower(0);
 
+        leftMotor.setPower(1);
+        rightMotor.setPower(0);
+        sleep(500);
+        rightMotor.setPower(0);
+        leftMotor.setPower(0);
+
+        leftMotor.setPower(-0.5);
+        rightMotor.setPower(0.5);
+        sleep(2000);
+        rightMotor.setPower(0);
+
         leftMotor.setPower(0);
         rightMotor.setPower(1);
         sleep(500);
         rightMotor.setPower(0);
         leftMotor.setPower(0);
 
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(-0.5);
-        sleep(0);
+        arm.setPower(1);
+        sleep(500);
+        arm.setPower(0);
+
+        leftMotor.setPower(-0.5);
+        rightMotor.setPower(0.5);
+        sleep(2000);
         rightMotor.setPower(0);
+
+
+
+
+
 
     }
 }
