@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program", group = "FTC Code")
 public class TeleOp extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
-    public final float ARMROT_SPEED_CAP = 0.3F;
+    public final float ARMROT_SPEED_CAP = 0.5F;
 
     public DcMotor leftMotor;
     public DcMotor rightMotor;
@@ -56,18 +56,10 @@ public class TeleOp extends OpMode {
     @Override
     public void loop() {
 //        Robot Movement
-
-
-        if (gamepad1.left_stick_y > 0.1) { // Forward/Backward
-            leftMotor.setPower(0.5);
-            rightMotor.setPower(0.5);
-
-        }
-        else if(gamepad1.left_stick_y < 0.1){
-            leftMotor.setPower(-0.5);
-            rightMotor.setPower(-0.5);
-        }
-        else {
+        if (gamepad1.left_stick_y != 0) { // Forward/Backward
+            leftMotorSpeed = gamepad1.left_stick_y;
+            rightMotorSpeed = gamepad1.left_stick_y;
+        } else {
             leftMotorSpeed = 0;
             rightMotorSpeed = 0;
         }
@@ -78,11 +70,11 @@ public class TeleOp extends OpMode {
         }
 
 //        Robot Arm
-        if (gamepad1.y) {
+        if (gamepad2.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
-        } else if (gamepad1.a) {
+        } else if (gamepad2.a) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
@@ -92,29 +84,26 @@ public class TeleOp extends OpMode {
                 armIdlePosition = armMotor.getCurrentPosition();
                 armMotor.setTargetPosition((int)armIdlePosition);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.3);
+                armMotor.setPower(0.15);
             }
         }
 
 //        Arm Yaw Servo
-        if (gamepad1.left_bumper) { // Arm Yaw Servo
-            if (armYawServoPosition > -360) {
+        if (gamepad2.left_bumper) { // Arm Yaw Servo
+            if (armYawServoPosition > -120) {
                 armYawServoPosition += 1;
             }
-        } else if (gamepad1.right_bumper) { // Intake Servo
-            if (armYawServoPosition < 360) {
+        } else if (gamepad2.right_bumper) { // Intake Servo
+            if (armYawServoPosition < 120) {
                 armYawServoPosition += -1;
             }
         }
 
 //        Intake Servo
-        if (gamepad1.right_trigger != 0) {
+        if (gamepad2.right_trigger != 0) {
             intakeServo.setPower(1);
-        } else if (gamepad1.left_trigger != 0) {
+        } else if (gamepad2.left_trigger != 0) {
             intakeServo.setPower(-1);
-        }
-        else{
-            intakeServo.setPower(0);
         }
 
         update();
