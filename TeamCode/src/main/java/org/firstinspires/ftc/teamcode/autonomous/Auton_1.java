@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name ="Autonomous_Official_1", group ="Learning FTC")
 //@Disabled
 public class Auton_1 extends LinearOpMode {
-//    hi this is arjun's edit
 
     private DcMotor leftMotor;
     private DcMotor rightMotor;

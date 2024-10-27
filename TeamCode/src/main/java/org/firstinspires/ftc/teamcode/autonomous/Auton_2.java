@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 @Autonomous(name ="Autonomous_Official_2", group ="Learning FTC")
 //@Disabled
 public class Auton_2 extends LinearOpMode {
-//    hi this is arjun's edit_
 
     private DcMotor leftMotor;
     private DcMotor rightMotor;
@@ -35,12 +34,26 @@ public class Auton_2 extends LinearOpMode {
         leftMotor.setDirection(DcMotor.Direction.REVERSE);
         arm.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        leftMotor.setPower(0.5);
-        rightMotor.setPower(-0.5);
-        sleep(1450);
+        arm.setPower(1);
+        sleep(500);
+        arm.setPower(0);
+
+        leftMotor.setPower(-0.5);
+        rightMotor.setPower(0.5);
+        sleep(500);
         leftMotor.setPower(0);
         rightMotor.setPower(0);
 
+        armServo.setPosition(0.75);
+        sleep(100);
+
+        arm.setPower(-1);
+        sleep(200);
+        arm.setPower(0);
+
+        intakeServo.setPower(-1.0);
+        sleep(300);
+        intakeServo.setPower(0);
 
     }
 }
