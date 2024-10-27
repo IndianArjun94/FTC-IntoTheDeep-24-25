@@ -55,6 +55,12 @@ public class Auton_2 extends LinearOpMode {
         sleep(300);
         intakeServo.setPower(0);
 
+        leftMotor.setPower(0.5);
+        rightMotor.setPower(-0.5);
+        sleep(500);
+        leftMotor.setPower(0);
+        rightMotor.setPower(0);
+
     }
 }
 
