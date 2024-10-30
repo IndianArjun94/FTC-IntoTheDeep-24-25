@@ -16,14 +16,15 @@ public class TeleOp extends OpMode {
 
     public Servo armYawServo;
     public CRServo intakeServo;
+    public Servo hangServo;
 
     public float leftMotorSpeed = 0;
     public float rightMotorSpeed = 0;
-
     public float armYawServoPosition = 0F;
 
     public boolean armMotorUnlocked = false;
     public float armIdlePosition = 0;
+    public double hangServoBaseValue = 0;
 
     public void print(String value, String value1) {
         telemetry.addData(value, value1);
@@ -51,6 +52,10 @@ public class TeleOp extends OpMode {
 
         armYawServo = hardwareMap.get(Servo.class, "armServo");
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
+        hangServo = hardwareMap.get(Servo.class, "hangServo");
+
+        hangServoBaseValue = hangServo.getPosition();
+        hangServo.setPosition(hangServoBaseValue);
     }
 
     @Override
@@ -70,11 +75,11 @@ public class TeleOp extends OpMode {
         }
 
 //        Robot Arm
-        if (gamepad2.y) {
+        if (gamepad1.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
-        } else if (gamepad2.a) {
+        } else if (gamepad1.a) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
@@ -88,25 +93,31 @@ public class TeleOp extends OpMode {
             }
         }
 
+//        Arm Lock Servo
+        if (gamepad1.x) {
+            hangServo.setPosition(hangServoBaseValue-180);
+        } else if (gamepad1.b) {
+            hangServo.setPosition(hangServoBaseValue);
+        }
+
 //        Arm Yaw Servo
-        if (gamepad2.left_bumper) { // Arm Yaw Servo
-            if (armYawServoPosition > -120) {
+        if (gamepad1.left_bumper) { // Arm Yaw Servo
+            if (armYawServoPosition < 120) {
                 armYawServoPosition += 1;
             }
-        } else if (gamepad2.right_bumper) { // Intake Servo
-            if (armYawServoPosition < 120) {
+        } else if (gamepad1.right_bumper) { // Intake Servo
+            if (armYawServoPosition > -120) {
                 armYawServoPosition += -1;
             }
         }
 
 //        Intake Servo
-        if (gamepad2.right_trigger != 0) {
+        if (gamepad1.right_trigger != 0) {
             intakeServo.setPower(1);
-        } else if (gamepad2.left_trigger != 0) {
+        } else if (gamepad1.left_trigger != 0) {
             intakeServo.setPower(-1);
         }
 
         update();
-
     }
 }
