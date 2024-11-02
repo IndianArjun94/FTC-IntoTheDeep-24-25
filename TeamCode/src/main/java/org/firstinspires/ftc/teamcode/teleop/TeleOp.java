@@ -75,11 +75,11 @@ public class TeleOp extends OpMode {
         }
 
 //        Robot Arm
-        if (gamepad1.y) {
+        if (gamepad1.y || gamepad2.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
-        } else if (gamepad1.a) {
+        } else if (gamepad1.a || gamepad2.a) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
@@ -101,22 +101,22 @@ public class TeleOp extends OpMode {
 //        }
 
 //        Arm Yaw Servo
-        if (gamepad1.left_bumper) { // Arm Yaw Servo
+        if (gamepad2.left_bumper) { // Arm Yaw Servo
             if (armYawServoPosition < 300) {
                 armYawServoPosition += 1;
             }
-        } else if (gamepad1.right_bumper) { // Intake Servo
+        } else if (gamepad2.right_bumper) { // Intake Servo
             if (armYawServoPosition > -300) {
                 armYawServoPosition += -1;
             }
         }
 
 //        Intake Servo
-        if (gamepad1.right_trigger != 0) {
+        if (gamepad2.right_trigger != 0) {
             intakeServo.setPower(1);
-        } else if (gamepad1.left_trigger != 0) {
+        } else if (gamepad2.left_trigger != 0) {
             intakeServo.setPower(-1);
-        } else if (gamepad1.x) {
+        } else if (gamepad2.x) {
             intakeServo.setPower(0);
         }
 
