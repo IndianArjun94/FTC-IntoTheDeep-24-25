@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program", group = "FTC Code")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program", group = "Final TeleOp")
 public class TeleOp extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
     public final float ARMROT_SPEED_CAP = 0.5F;
@@ -93,20 +93,20 @@ public class TeleOp extends OpMode {
             }
         }
 
-//        Arm Lock Servo
-        if (gamepad1.x) {
-            hangServo.setPosition(hangServoBaseValue-180);
-        } else if (gamepad1.b) {
-            hangServo.setPosition(hangServoBaseValue);
-        }
+//        Arm Lock Servo - DISABLED
+//        if (gamepad1.x) {
+//            hangServo.setPosition(hangServoBaseValue-180);
+//        } else if (gamepad1.b) {
+//            hangServo.setPosition(hangServoBaseValue);
+//        }
 
 //        Arm Yaw Servo
         if (gamepad1.left_bumper) { // Arm Yaw Servo
-            if (armYawServoPosition < 120) {
+            if (armYawServoPosition < 300) {
                 armYawServoPosition += 1;
             }
         } else if (gamepad1.right_bumper) { // Intake Servo
-            if (armYawServoPosition > -120) {
+            if (armYawServoPosition > -300) {
                 armYawServoPosition += -1;
             }
         }
@@ -116,6 +116,8 @@ public class TeleOp extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad1.left_trigger != 0) {
             intakeServo.setPower(-1);
+        } else if (gamepad1.x) {
+            intakeServo.setPower(0);
         }
 
         update();
