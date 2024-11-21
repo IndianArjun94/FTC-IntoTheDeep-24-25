@@ -12,12 +12,12 @@ public class TeleOp extends OpMode {
     public final int VIPER_SLIDE_MIN = 0;
     public final int VIPER_SLIDE_MAX = 3000;
 
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
+    public DcMotor frontLeftMotor;
+    public DcMotor frontRightMotor;
+    public DcMotor backLeftMotor;
+    public DcMotor backRightMotor;
     public DcMotor armMotor;
-    public DcMotor viperSlide;
+    public DcMotor viperSlideMotor;
 
     public CRServo intakeServo;
 
@@ -38,53 +38,32 @@ public class TeleOp extends OpMode {
 
     public void update() {
 //        Robot Movement
-        frontLeft.setPower(-frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        frontRight.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        backLeft.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        backRight.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        viperSlide.setPower(viperSlideSpeed);
-    }
-
-    public void setMotorPower(double power) {
-        frontLeft.setPower(power);
-        frontRight.setPower(power);
-        backLeft.setPower(power);
-        backRight.setPower(power);
-    }
-
-    public void changeMotorPower(double power) {
-        frontLeft.setPower(frontLeftMotorSpeed + power);
-        frontRight.setPower(frontRightMotorSpeed + power);
-        backLeft.setPower(backLeftMotorSpeed + power);
-        backRight.setPower(backRightMotorSpeed + power);
-    }
-
-    public void changeMotorPowerLateral(double power) {
-        frontLeft.setPower(frontLeftMotorSpeed - power);
-        frontRight.setPower(frontRightMotorSpeed + power);
-        backLeft.setPower(backLeftMotorSpeed + power);
-        backRight.setPower(backRightMotorSpeed - power);
+        frontLeftMotor.setPower(-frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        backLeftMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        backRightMotor.setPower(-frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        viperSlideMotor.setPower(viperSlideSpeed);
     }
 
     @Override
     public void init() {
-        frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
-        frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
-        backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
-        backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
+        frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+        frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+        backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
+        backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         armMotor = hardwareMap.get(DcMotor.class, "armRotationMotor");
-        viperSlide = hardwareMap.get(DcMotor.class, "viperSlide");
+        viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        viperSlide.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        viperSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
@@ -92,18 +71,29 @@ public class TeleOp extends OpMode {
     public void loop() {
 //        Robot Movement
         if (gamepad1.left_stick_y != 0) { // Forward/Backward
-            setMotorPower(gamepad1.left_stick_y);
+            frontLeftMotorSpeed = gamepad1.left_stick_y;
+            frontRightMotorSpeed = gamepad1.left_stick_y;
+            backLeftMotorSpeed = gamepad1.left_stick_y;
+            backRightMotorSpeed = gamepad1.left_stick_y;
         } else {
-            setMotorPower(0);
+            frontLeftMotorSpeed = 0;
+            frontRightMotorSpeed = 0;
+            backLeftMotorSpeed = 0;
+            backRightMotorSpeed = 0;
         }
 
         if (gamepad1.left_stick_x != 0) {
-            changeMotorPowerLateral(gamepad1.left_stick_x);
+            frontLeftMotorSpeed -= gamepad1.left_stick_x;
+            frontRightMotorSpeed += gamepad1.left_stick_x;
+            backLeftMotorSpeed += gamepad1.left_stick_x;
+            backRightMotorSpeed -= gamepad1.left_stick_x;
         }
 
         if (gamepad1.right_stick_x != 0) { // Left/Right
             frontLeftMotorSpeed -= gamepad1.right_stick_x;
+            backLeftMotorSpeed -= gamepad1.right_stick_x;
             frontRightMotorSpeed += gamepad1.right_stick_x;
+            backRightMotorSpeed += gamepad1.right_stick_x;
         }
 
 //        Robot Arm
@@ -146,13 +136,13 @@ public class TeleOp extends OpMode {
 
 //        Viper Slide
         if (gamepad1.right_trigger != 0) {
-            viperSlide.setTargetPosition(VIPER_SLIDE_MAX);
-            viperSlide.setPower(gamepad1.right_trigger);
+            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MAX);
+            viperSlideMotor.setPower(gamepad1.right_trigger);
         } else if (gamepad1.left_trigger != 0) {
-            viperSlide.setTargetPosition(VIPER_SLIDE_MIN);
-            viperSlide.setPower(-gamepad1.left_trigger);
+            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MIN);
+            viperSlideMotor.setPower(-gamepad1.left_trigger);
         } else {
-            viperSlide.setPower(0);
+            viperSlideMotor.setPower(0);
         }
 
 //        Intake Servo
