@@ -38,10 +38,10 @@ public class TeleOp extends OpMode {
 
     public void update() {
 //        Robot Movement
-        frontLeftMotor.setPower(-frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        frontLeftMotor.setPower(frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         backLeftMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        backRightMotor.setPower(-frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        backRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         viperSlideMotor.setPower(viperSlideSpeed);
     }
 
