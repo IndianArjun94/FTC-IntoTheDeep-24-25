@@ -61,7 +61,7 @@ public class TeleOp extends OpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -137,11 +137,14 @@ public class TeleOp extends OpMode {
 //        Viper Slide
         if (gamepad1.right_trigger != 0) {
             viperSlideMotor.setTargetPosition(VIPER_SLIDE_MAX);
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             viperSlideMotor.setPower(gamepad1.right_trigger);
         } else if (gamepad1.left_trigger != 0) {
             viperSlideMotor.setTargetPosition(VIPER_SLIDE_MIN);
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             viperSlideMotor.setPower(-gamepad1.left_trigger);
         } else {
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             viperSlideMotor.setPower(0);
         }
 
