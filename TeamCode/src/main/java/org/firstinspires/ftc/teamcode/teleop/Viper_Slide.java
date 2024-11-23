@@ -26,11 +26,12 @@ public class Viper_Slide extends OpMode {
         if (gamepad1.right_stick_y > 0.0 || gamepad1.left_stick_y > 0.0) {
             viperSlide.setTargetPosition(VIPER_SLIDE_MAX);
             viperSlide.setPower(gamepad1.right_stick_y);
-        } else if (gamepad1.right_stick_y < 0.0 || gamepad1.left_stick_y < 0.0) {
+        }
+        else if (gamepad1.right_stick_y < 0.0 || gamepad1.left_stick_y < 0.0) {
             viperSlide.setTargetPosition(VIPER_SLIDE_MIN);
             viperSlide.setPower(gamepad1.right_stick_y);
-
-        } else {
+        }
+        else {
             viperSlide.setPower(0);
         }
 
