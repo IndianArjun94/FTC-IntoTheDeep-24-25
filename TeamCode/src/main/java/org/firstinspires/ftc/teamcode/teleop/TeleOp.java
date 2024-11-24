@@ -119,10 +119,10 @@ public class TeleOp extends OpMode {
 
 //        Rotation
         if (gamepad1.right_stick_x != 0) {
-            frontLeftMotorSpeed += right_stick_x * 0.3f;
-            backLeftMotorSpeed += right_stick_x * 0.3f;
-            frontRightMotorSpeed -= right_stick_x * 0.3f;
-            backRightMotorSpeed -= right_stick_x * 0.3f;
+            frontLeftMotorSpeed += right_stick_x;
+            backLeftMotorSpeed += right_stick_x;
+            frontRightMotorSpeed -= right_stick_x;
+            backRightMotorSpeed -= right_stick_x;
         }
 
 //        Robot Arm
