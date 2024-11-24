@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program", group = "Final TeleOp")
 public class TeleOp extends OpMode {
-    public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
-    public final float ARMROT_SPEED_CAP = 0.5F;
+    public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
+    public final float ARMROT_SPEED_CAP = 0.7F;
 
-    public final int VIPER_SLIDE_MIN = 0;
-    public final int VIPER_SLIDE_MAX = 3000;
+    public final int VIPER_SLIDE_MIN = -8000;
+    public final int VIPER_SLIDE_MAX = 200;
 
     public DcMotor frontLeftMotor;
     public DcMotor frontRightMotor;
@@ -38,11 +38,12 @@ public class TeleOp extends OpMode {
 
     public void update() {
 //        Robot Movement
-        frontLeftMotor.setPower(frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        backLeftMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        backRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-        viperSlideMotor.setPower(viperSlideSpeed);
+        frontLeftMotor.setPower(frontLeftMotorSpeed);
+        frontRightMotor.setPower(frontRightMotorSpeed);
+        backLeftMotor.setPower(backLeftMotorSpeed);
+        backRightMotor.setPower(backRightMotorSpeed);
+
+        viperSlideMotor.setPower(-viperSlideSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
     }
 
     @Override
@@ -61,59 +62,86 @@ public class TeleOp extends OpMode {
         backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        print("ViperSlide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
+
+
+//        viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
     public void loop() {
-//        Robot Movement
-        if (gamepad1.left_stick_y != 0) { // Forward/Backward
-            frontLeftMotorSpeed = gamepad1.left_stick_y;
-            frontRightMotorSpeed = gamepad1.left_stick_y;
-            backLeftMotorSpeed = gamepad1.left_stick_y;
-            backRightMotorSpeed = gamepad1.left_stick_y;
-        } else {
-            frontLeftMotorSpeed = 0;
-            frontRightMotorSpeed = 0;
-            backLeftMotorSpeed = 0;
-            backRightMotorSpeed = 0;
-        }
+        frontLeftMotorSpeed = 0;
+        frontRightMotorSpeed = 0;
+        backLeftMotorSpeed = 0;
+        backRightMotorSpeed = 0;
+        viperSlideSpeed = 0;
+
+//        float left_stick_x = gamepad1.left_stick_x;
+//        float left_stick_y = gamepad1.left_stick_y;
+//        float right_stick_x = gamepad1.right_stick_x;
+
+        float left_stick_x = 0;
+        float left_stick_y = 0;
+        float right_stick_x = 0;
 
         if (gamepad1.left_stick_x != 0) {
-            frontLeftMotorSpeed -= gamepad1.left_stick_x;
-            frontRightMotorSpeed += gamepad1.left_stick_x;
-            backLeftMotorSpeed += gamepad1.left_stick_x;
-            backRightMotorSpeed -= gamepad1.left_stick_x;
+            left_stick_x = 0.5f;
         }
 
-        if (gamepad1.right_stick_x != 0) { // Left/Right
-            frontLeftMotorSpeed -= gamepad1.right_stick_x;
-            backLeftMotorSpeed -= gamepad1.right_stick_x;
-            frontRightMotorSpeed += gamepad1.right_stick_x;
-            backRightMotorSpeed += gamepad1.right_stick_x;
+        if (gamepad1.left_stick_y != 0) {
+            left_stick_y = 0.5f;
+        }
+
+        if (gamepad1.right_stick_x != 0) {
+            right_stick_x = 0.5f;
+        }
+
+//        Forward/Backward Movement
+        if (left_stick_y != 0) { // Forward/Backward
+            frontLeftMotorSpeed = -left_stick_y;
+            frontRightMotorSpeed = -left_stick_y;
+            backLeftMotorSpeed = -left_stick_y;
+            backRightMotorSpeed = -left_stick_y;
+        }
+
+//        Lateral Movement
+        if (left_stick_x != 0) {
+            frontLeftMotorSpeed += left_stick_x;
+            frontRightMotorSpeed -= left_stick_x;
+            backLeftMotorSpeed -= left_stick_x;
+            backRightMotorSpeed += left_stick_x;
+        }
+
+//        Rotation
+        if (gamepad1.right_stick_x != 0) {
+            frontLeftMotorSpeed += right_stick_x * 0.3f;
+            backLeftMotorSpeed += right_stick_x * 0.3f;
+            frontRightMotorSpeed -= right_stick_x * 0.3f;
+            backRightMotorSpeed -= right_stick_x * 0.3f;
         }
 
 //        Robot Arm
         if (gamepad1.y || gamepad2.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
-//            armMotorUnlocked = true;
+            armMotorUnlocked = true;
         } else if (gamepad1.a || gamepad2.a) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
-//            armMotorUnlocked = true;
+            armMotorUnlocked = true;
         } else {
-//            if (armMotorUnlocked) {
-//                armMotorUnlocked = false;
-//                armIdlePosition = armMotor.getCurrentPosition();
-//                armMotor.setTargetPosition((int)armIdlePosition);
-//                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//                armMotor.setPower(0.15);
-//            }
-            armMotor.setPower(0);
+            if (armMotorUnlocked) {
+                armMotorUnlocked = false;
+                armIdlePosition = armMotor.getCurrentPosition();
+                armMotor.setTargetPosition((int)armIdlePosition);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.setPower(0.4);
+            }
         }
 
 //        Arm Lock Servo - DISABLED
@@ -135,18 +163,15 @@ public class TeleOp extends OpMode {
 //        }
 
 //        Viper Slide
-        if (gamepad1.right_trigger != 0) {
-            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MAX);
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            viperSlideMotor.setPower(gamepad1.right_trigger);
-        } else if (gamepad1.left_trigger != 0) {
-            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MIN);
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            viperSlideMotor.setPower(-gamepad1.left_trigger);
+        if (gamepad1.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
+            viperSlideSpeed += 0.75f;
+        } else if (gamepad1.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
+            viperSlideSpeed -= 0.75f;
         } else {
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             viperSlideMotor.setPower(0);
         }
+
+        print("ViperSlide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
 
 //        Intake Servo
         if (gamepad2.right_bumper) {
