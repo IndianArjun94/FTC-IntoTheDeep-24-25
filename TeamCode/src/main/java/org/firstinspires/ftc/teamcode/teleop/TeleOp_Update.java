@@ -9,10 +9,8 @@ public class TeleOp_Update extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
     public final float ARMROT_SPEED_CAP = 0.5F;
 
-
     public final int VIPER_SLIDE_MIN = 0;
     public final int VIPER_SLIDE_MAX = 1000;
-
 
     public DcMotor frontLeftMotor;
     public DcMotor frontRightMotor;
@@ -64,8 +62,6 @@ public class TeleOp_Update extends OpMode {
         backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-
     }
 
     @Override
@@ -82,21 +78,18 @@ public class TeleOp_Update extends OpMode {
             backLeftMotorSpeed = 0;
             backRightMotorSpeed = 0;
         }
-
         if (gamepad1.left_stick_x != 0) {
             frontLeftMotorSpeed -= gamepad1.left_stick_x;
             frontRightMotorSpeed += gamepad1.left_stick_x;
             backLeftMotorSpeed += gamepad1.left_stick_x;
             backRightMotorSpeed -= gamepad1.left_stick_x;
         }
-
         if (gamepad1.right_stick_x != 0) { // Left/Right
             frontLeftMotorSpeed -= gamepad1.right_stick_x;
             backLeftMotorSpeed -= gamepad1.right_stick_x;
             frontRightMotorSpeed += gamepad1.right_stick_x;
             backRightMotorSpeed += gamepad1.right_stick_x;
         }
-
 //        Robot Arm
         if (gamepad1.y || gamepad2.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -116,7 +109,6 @@ public class TeleOp_Update extends OpMode {
 //            }
             armMotor.setPower(0);
         }
-
 //        Arm Lock Servo - DISABLED
 //        if (gamepad1.x) {
 //            hangServo.setPosition(hangServoBaseValue-180);
@@ -134,7 +126,6 @@ public class TeleOp_Update extends OpMode {
 //                armYawServoPosition += -1;
 //            }
 //        }
-
 //        Viper Slide
         if (gamepad1.right_trigger != 0) {
             viperSlideMotor.setPower(1);
@@ -144,7 +135,6 @@ public class TeleOp_Update extends OpMode {
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             viperSlideMotor.setPower(0);
         }
-
 //        Intake Servo
         if (gamepad2.right_bumper) {
             intakeServo.setPower(1);
@@ -152,265 +142,8 @@ public class TeleOp_Update extends OpMode {
             intakeServo.setPower(-1);
         } else if (gamepad2.x) {
             intakeServo.setPower(0);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         }
+
 
         update();
     }
