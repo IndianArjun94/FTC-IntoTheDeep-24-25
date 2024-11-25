@@ -4,13 +4,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program", group = "Final TeleOp")
-public class TeleOp extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program2", group = "Final TeleOp")
+public class TeleOp_Update extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
     public final float ARMROT_SPEED_CAP = 0.5F;
 
+
     public final int VIPER_SLIDE_MIN = 0;
-    public final int VIPER_SLIDE_MAX = 3000;
+    public final int VIPER_SLIDE_MAX = 1000;
+
 
     public DcMotor frontLeftMotor;
     public DcMotor frontRightMotor;
@@ -63,8 +65,7 @@ public class TeleOp extends OpMode {
         armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
     }
 
     @Override
@@ -136,13 +137,9 @@ public class TeleOp extends OpMode {
 
 //        Viper Slide
         if (gamepad1.right_trigger != 0) {
-            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MAX);
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            viperSlideMotor.setPower(gamepad1.right_trigger);
+            viperSlideMotor.setPower(1);
         } else if (gamepad1.left_trigger != 0) {
-            viperSlideMotor.setTargetPosition(VIPER_SLIDE_MIN);
-            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            viperSlideMotor.setPower(-gamepad1.left_trigger);
+            viperSlideMotor.setPower(-1);
         } else {
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             viperSlideMotor.setPower(0);
@@ -155,6 +152,264 @@ public class TeleOp extends OpMode {
             intakeServo.setPower(-1);
         } else if (gamepad2.x) {
             intakeServo.setPower(0);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         }
 
         update();
