@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program2", group = "Final TeleOp")
-public class TeleOp_Update extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Alpha", group = "TeleOp")
+public class TeleOp_ALPHA extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
     public final float ARMROT_SPEED_CAP = 0.5F;
 
@@ -91,11 +91,11 @@ public class TeleOp_Update extends OpMode {
             backRightMotorSpeed += gamepad1.right_stick_x;
         }
 //        Robot Arm
-        if (gamepad1.y || gamepad2.y) {
+        if (gamepad2.y) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
 //            armMotorUnlocked = true;
-        } else if (gamepad1.a || gamepad2.a) {
+        } else if (gamepad2.a) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
 //            armMotorUnlocked = true;

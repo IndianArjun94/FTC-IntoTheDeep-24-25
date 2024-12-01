@@ -4,13 +4,13 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "12/1/24 test")
-public class Golden extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp BETA", group = "TeleOp")
+public class TeleOp_BETA extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
-    public final int VIPER_SLIDE_MIN = -8000;
-    public final int VIPER_SLIDE_MAX = 200;
+    public final int VIPER_SLIDE_MIN = -12000;
+    public final int VIPER_SLIDE_MAX = 2000;
 
     public DcMotor frontLeftMotor;
     public DcMotor frontRightMotor;
@@ -75,7 +75,7 @@ public class Golden extends OpMode {
         float right_stick_x = gamepad1.right_stick_x;
 
 //        Forward/Backward Movement
-        if (gamepad1.left_stick_y != 0) {
+        if (left_stick_y != 0) {
             frontLeftMotorSpeed = -left_stick_y;
             frontRightMotorSpeed = -left_stick_y;
             backLeftMotorSpeed = -left_stick_y;
@@ -83,7 +83,7 @@ public class Golden extends OpMode {
         }
 
 //        Lateral Movement
-        if (gamepad1.left_stick_x != 0) {
+        if (left_stick_x != 0) {
             frontLeftMotorSpeed += left_stick_x;
             frontRightMotorSpeed -= left_stick_x;
             backLeftMotorSpeed -= left_stick_x;
@@ -91,7 +91,7 @@ public class Golden extends OpMode {
         }
 
 //        Rotation
-        if (gamepad1.right_stick_x != 0) {
+        if (right_stick_x != 0) {
             frontLeftMotorSpeed += right_stick_x;
             backLeftMotorSpeed += right_stick_x;
             frontRightMotorSpeed -= right_stick_x;
@@ -99,11 +99,11 @@ public class Golden extends OpMode {
         }
 
 //        Robot Arm
-        if (gamepad1.y || gamepad2.y) {
+        if (gamepad2.dpad_up) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
-        } else if (gamepad1.a || gamepad2.a) {
+        } else if (gamepad2.dpad_down) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
             armMotorUnlocked = true;
@@ -136,10 +136,10 @@ public class Golden extends OpMode {
 //        }
 
 //        Viper Slide
-        if (gamepad2.right_stick_y > 0 || gamepad2.left_stick_y > 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
-            viperSlideSpeed += 0.75f;
-        } else if (gamepad1.right_stick_y < 0 || gamepad2.left_stick_y < 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
-            viperSlideSpeed -= 0.75f;
+        if (gamepad2.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
+            viperSlideSpeed += gamepad2.right_trigger;
+        } else if (gamepad2.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
+            viperSlideSpeed -= gamepad2.left_trigger;
         } else {
             viperSlideMotor.setPower(0);
         }

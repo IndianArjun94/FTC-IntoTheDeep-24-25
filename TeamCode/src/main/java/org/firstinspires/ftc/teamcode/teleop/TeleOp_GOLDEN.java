@@ -4,12 +4,12 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Final Prog")
-public class TeleOp_Final extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp GOLDEN", group = "TeleOp")
+public class TeleOp_GOLDEN extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
-    public final int VIPER_SLIDE_MIN = 12000;
+    public final int VIPER_SLIDE_MIN = -12000;
     public final int VIPER_SLIDE_MAX = 2000;
 
     public DcMotor frontLeftMotor;
@@ -42,6 +42,8 @@ public class TeleOp_Final extends OpMode {
         frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         backLeftMotor.setPower(backLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         backRightMotor.setPower(backRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+
+        viperSlideMotor.setPower(-viperSlideSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
     }
 
     @Override
@@ -51,6 +53,7 @@ public class TeleOp_Final extends OpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         armMotor = hardwareMap.get(DcMotor.class, "armRotationMotor");
+        viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
@@ -64,6 +67,8 @@ public class TeleOp_Final extends OpMode {
         frontRightMotorSpeed = 0;
         backLeftMotorSpeed = 0;
         backRightMotorSpeed = 0;
+
+        viperSlideSpeed = 0;
 
         float left_stick_x = gamepad1.left_stick_x;
         float left_stick_y = gamepad1.left_stick_y;
@@ -86,7 +91,7 @@ public class TeleOp_Final extends OpMode {
         }
 
 //        Rotation
-        if (gamepad1.right_stick_x != 0) {
+        if (right_stick_x != 0) {
             frontLeftMotorSpeed += right_stick_x;
             backLeftMotorSpeed += right_stick_x;
             frontRightMotorSpeed -= right_stick_x;
@@ -131,10 +136,10 @@ public class TeleOp_Final extends OpMode {
 //        }
 
 //        Viper Slide
-        if (gamepad1.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
-            viperSlideMotor.setPower(-0.75);
-        } else if (gamepad1.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
-            viperSlideMotor.setPower(0.75);
+        if (gamepad2.right_stick_y > 0 || gamepad2.left_stick_y > 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
+            viperSlideSpeed += 0.75f;
+        } else if (gamepad1.right_stick_y < 0 || gamepad2.left_stick_y < 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
+            viperSlideSpeed -= 0.75f;
         } else {
             viperSlideMotor.setPower(0);
         }
@@ -146,9 +151,10 @@ public class TeleOp_Final extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad2.left_bumper) {
             intakeServo.setPower(-1);
-        } else if (gamepad2.x) {
+        } else if (gamepad2.right_bumper && gamepad2.left_bumper) {
             intakeServo.setPower(0);
         }
+
 
         update();
     }
