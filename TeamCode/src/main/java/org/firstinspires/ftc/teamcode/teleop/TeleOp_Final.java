@@ -9,8 +9,8 @@ public class TeleOp_Final extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
-    public final int VIPER_SLIDE_MIN = -8000;
-    public final int VIPER_SLIDE_MAX = 200;
+    public final int VIPER_SLIDE_MIN = 12000;
+    public final int VIPER_SLIDE_MAX = 2000;
 
     public DcMotor frontLeftMotor;
     public DcMotor frontRightMotor;
@@ -42,8 +42,6 @@ public class TeleOp_Final extends OpMode {
         frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         backLeftMotor.setPower(backLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         backRightMotor.setPower(backRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
-
-        viperSlideMotor.setPower(-viperSlideSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
     }
 
     @Override
@@ -53,7 +51,6 @@ public class TeleOp_Final extends OpMode {
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         armMotor = hardwareMap.get(DcMotor.class, "armRotationMotor");
-        viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
@@ -67,8 +64,6 @@ public class TeleOp_Final extends OpMode {
         frontRightMotorSpeed = 0;
         backLeftMotorSpeed = 0;
         backRightMotorSpeed = 0;
-
-        viperSlideSpeed = 0;
 
         float left_stick_x = gamepad1.left_stick_x;
         float left_stick_y = gamepad1.left_stick_y;
@@ -137,9 +132,9 @@ public class TeleOp_Final extends OpMode {
 
 //        Viper Slide
         if (gamepad1.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
-            viperSlideSpeed += 0.75f;
+            viperSlideMotor.setPower(-0.75);
         } else if (gamepad1.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
-            viperSlideSpeed -= 0.75f;
+            viperSlideMotor.setPower(0.75);
         } else {
             viperSlideMotor.setPower(0);
         }
