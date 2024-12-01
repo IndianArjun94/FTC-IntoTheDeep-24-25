@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton4_EmptyAuton")
 
 
-public class AutonEmpty extends OpMode {
+public class ParkingAuton extends OpMode {
 
     //   Name Motors
     private DcMotor frontLeft;
@@ -32,17 +32,18 @@ public class AutonEmpty extends OpMode {
     @Override
     public void loop() {
 // code
-        frontLeft.setPower(0);
-        frontRight.setPower(0);
-        backLeft.setPower(0);
-        backRight.setPower(0);
+        frontLeft.setPower(0.3);
+        frontRight.setPower(-0.3);
+        backLeft.setPower(-0.3);
+        backRight.setPower(0.3);
 
-        // sleep for 35 seconds
+        // sleep for 3 seconds
         try {
-            Thread.sleep(35000);
+            Thread.sleep(3000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
 
     }
 }
+
