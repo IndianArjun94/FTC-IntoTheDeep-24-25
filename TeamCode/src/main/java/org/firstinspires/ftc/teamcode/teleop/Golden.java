@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp Program")
-public class TeleOp extends OpMode {
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "12/1/24 test")
+public class Golden extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
@@ -27,7 +27,7 @@ public class TeleOp extends OpMode {
     public float backRightMotorSpeed = 0;
     public float viperSlideSpeed = 0;
 
-//    Old Arm-Locking Mechanism
+    //    Old Arm-Locking Mechanism
     public boolean armMotorUnlocked = false;
     public float armIdlePosition = 0;
 
@@ -38,10 +38,10 @@ public class TeleOp extends OpMode {
 
     public void update() {
 //        Robot Movement
-//        frontLeftMotor.setPower(frontLeftMotorSpeed);
-//        frontRightMotor.setPower(frontRightMotorSpeed);
-//        backLeftMotor.setPower(backLeftMotorSpeed);
-//        backRightMotor.setPower(backRightMotorSpeed);
+        frontLeftMotor.setPower(frontLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        frontRightMotor.setPower(frontRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        backLeftMotor.setPower(backLeftMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
+        backRightMotor.setPower(backRightMotorSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
 
         viperSlideMotor.setPower(-viperSlideSpeed * MOTOR_MULTIPLIER_PERCENTAGE_CAP);
     }
@@ -57,20 +57,8 @@ public class TeleOp extends OpMode {
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
-//        frontLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        frontRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backLeftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        backRightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-//        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        print("ViperSlide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
-
-
-//        viperSlideMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        armMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     @Override
@@ -79,69 +67,35 @@ public class TeleOp extends OpMode {
         frontRightMotorSpeed = 0;
         backLeftMotorSpeed = 0;
         backRightMotorSpeed = 0;
+
         viperSlideSpeed = 0;
 
-        frontLeftMotor.setPower(0.3);
-        frontRightMotor.setPower(0.3);
-        backLeftMotor.setPower(0.3);
-        backRightMotor.setPower(0.3);
-
-//        float left_stick_x = gamepad1.left_stick_x;
-//        float left_stick_y = gamepad1.left_stick_y;
-//        float right_stick_x = gamepad1.right_stick_x;
-
-        float left_stick_x = 0;
-        float left_stick_y = 0;
-        float right_stick_x = 0;
-
-        if (gamepad1.left_stick_x > 0) {
-            left_stick_x = 0.5f;
-        } else if (gamepad1.left_stick_x < 0) {
-            left_stick_x = -0.5f;
-        }
-
-        if (gamepad1.left_stick_y > 0) {
-            left_stick_y = 0.5f;
-        } else if (gamepad1.left_stick_y < 0) {
-            left_stick_y = -0.5f;
-        }
-
-        if (gamepad1.right_stick_x > 0) {
-            right_stick_x = 0.5f;
-        } else if (gamepad1.right_stick_x < 0) {
-            right_stick_x = -0.5f;
-        }
+        float left_stick_x = gamepad1.left_stick_x;
+        float left_stick_y = gamepad1.left_stick_y;
+        float right_stick_x = gamepad1.right_stick_x;
 
 //        Forward/Backward Movement
-        if (left_stick_y != 0) {
-//            frontLeftMotorSpeed = left_stick_y;
-//            frontRightMotorSpeed = left_stick_y;
-//            backLeftMotorSpeed = left_stick_y;
-//            backRightMotorSpeed = left_stick_y;
-//            frontLeftMotor.setPower(left_stick_y);
-//            frontRightMotor.setPower(left_stick_y);
-//            backLeftMotor.setPower(left_stick_y);
-//            backRightMotor.setPower(left_stick_y);
+        if (gamepad1.left_stick_y != 0) {
+            frontLeftMotorSpeed = -left_stick_y;
+            frontRightMotorSpeed = -left_stick_y;
+            backLeftMotorSpeed = -left_stick_y;
+            backRightMotorSpeed = -left_stick_y;
         }
 
 //        Lateral Movement
-        if (left_stick_x != 0) {
-//            frontLeftMotorSpeed += left_stick_x;
-//            frontRightMotorSpeed -= left_stick_x;
-//            backLeftMotorSpeed -= left_stick_x;
-//            backRightMotorSpeed += left_stick_x;
-//            frontLeftMotor.setPower(left_stick_x);
-//            frontRightMotor.setPower(-left_stick_x);
-//            backLeftMotor.setPower(left_stick_x);
-//            backRightMotor.setPower(-left_stick_x);
+        if (gamepad1.left_stick_x != 0) {
+            frontLeftMotorSpeed += left_stick_x;
+            frontRightMotorSpeed -= left_stick_x;
+            backLeftMotorSpeed -= left_stick_x;
+            backRightMotorSpeed += left_stick_x;
         }
 
 //        Rotation
         if (gamepad1.right_stick_x != 0) {
-//            frontLeftMotorSpeed += right_stick_x;
-//            backLeftMotorSpeed += right_stick_x;
-//            frontRightMotorSpeed -= right_stick_x;
-//            backRightMotorSpeed -= right_stick_x;
+            frontLeftMotorSpeed += right_stick_x;
+            backLeftMotorSpeed += right_stick_x;
+            frontRightMotorSpeed -= right_stick_x;
+            backRightMotorSpeed -= right_stick_x;
         }
 
 //        Robot Arm
@@ -182,9 +136,9 @@ public class TeleOp extends OpMode {
 //        }
 
 //        Viper Slide
-        if (gamepad1.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
+        if (gamepad2.right_stick_y > 0 || gamepad2.left_stick_y > 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
             viperSlideSpeed += 0.75f;
-        } else if (gamepad1.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
+        } else if (gamepad1.right_stick_y < 0 || gamepad2.left_stick_y < 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
             viperSlideSpeed -= 0.75f;
         } else {
             viperSlideMotor.setPower(0);
@@ -197,9 +151,10 @@ public class TeleOp extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad2.left_bumper) {
             intakeServo.setPower(-1);
-        } else if (gamepad2.x) {
+        } else if (gamepad2.right_bumper && gamepad2.left_bumper) {
             intakeServo.setPower(0);
         }
+
 
         update();
     }
