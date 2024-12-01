@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp GOLDEN", group = "TeleOp")
 public class TeleOp_GOLDEN extends OpMode {
+
+//    Decleration
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
