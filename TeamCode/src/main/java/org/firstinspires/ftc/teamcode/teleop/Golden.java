@@ -155,6 +155,7 @@ public class Golden extends OpMode {
             intakeServo.setPower(0);
         }
 
+
         update();
     }
 }
