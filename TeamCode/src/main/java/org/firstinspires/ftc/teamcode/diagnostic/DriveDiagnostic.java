@@ -32,27 +32,27 @@ public class DriveDiagnostic extends OpMode {
     @Override
     public void loop() {
         if (gamepad1.x) {
-            frontLeft.setPower(1);
+            frontLeft.setPower(0.5);
         } else {
             frontLeft.setPower(0);
         }
 
         if (gamepad1.y) {
-            frontRight.setPower(1);
+            frontRight.setPower(0.5);
         } else {
             frontRight.setPower(0);
         }
 
         if (gamepad1.b) {
-            backRight.setPower(1);
+            backLeft.setPower(0.5);
         } else {
-            backRight.setPower(0);
+            backLeft.setPower(0);
         }
 
         if (gamepad1.a) {
-            backLeft.setPower(1);
+            backRight.setPower(0.5);
         } else {
-            backLeft.setPower(0);
+            backRight.setPower(0);
         }
     }
 }
