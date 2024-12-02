@@ -136,10 +136,10 @@ public class TeleOp_BETA extends OpMode {
 //        }
 
 //        Viper Slide
-        if (gamepad2.right_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
-            viperSlideSpeed += gamepad2.right_trigger;
-        } else if (gamepad2.left_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
-            viperSlideSpeed -= gamepad2.left_trigger;
+        if (gamepad2.left_trigger != 0 && viperSlideMotor.getCurrentPosition() >= VIPER_SLIDE_MIN) {
+            viperSlideSpeed -= gamepad2.right_trigger;
+        } else if (gamepad2.right_trigger != 0 && viperSlideMotor.getCurrentPosition() <= VIPER_SLIDE_MAX) {
+            viperSlideSpeed += gamepad2.left_trigger;
         } else {
             viperSlideMotor.setPower(0);
         }
