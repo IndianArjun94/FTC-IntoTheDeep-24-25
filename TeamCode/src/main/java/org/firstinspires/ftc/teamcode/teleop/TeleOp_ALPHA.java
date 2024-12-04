@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp BETA", group = "TeleOp")
+@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp ALPHA", group = "TeleOp")
 public class TeleOp_ALPHA extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
@@ -116,6 +116,8 @@ public class TeleOp_ALPHA extends OpMode {
         } else {
             viperSlideMotor.setPower(0);
         }
+
+        print("Viper Slide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
 
 //        Intake Servo
         if (gamepad2.right_bumper) {

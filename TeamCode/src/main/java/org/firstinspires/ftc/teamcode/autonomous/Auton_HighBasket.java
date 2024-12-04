@@ -37,7 +37,6 @@ public class Auton_HighBasket extends LinearOpMode {
         backRightMotor.setPower(-power);
     }
 
-
     public void stopMotors() {
         frontLeftMotor.setPower(0);
         frontRightMotor.setPower(0);
@@ -60,32 +59,39 @@ public class Auton_HighBasket extends LinearOpMode {
 
         waitForStart();
 
-        moveForward(0.5f);
-        sleep(250);
         rotateLeft(0.5f);
-        sleep(1000);
-        moveForward(1);
-        sleep(3500);
+        sleep(700);
+        moveForward(0.5f);
+        sleep(1450);
+        rotateLeft(0.5f);
+        sleep(375);
+        moveForward(0.25);
+        sleep(135);
 
         frontLeftMotor.setPower(0.4f);
         frontRightMotor.setPower(-0.6f);
         backLeftMotor.setPower(-0.4f);
         backRightMotor.setPower(0.6f);
 
-        sleep(1250);
+        sleep(135);
         stopMotors();
 
         armMotor.setPower(0.8);
-        sleep(1250);
+        sleep(1000);
         int lockingPosition = armMotor.getCurrentPosition();
         armMotor.setTargetPosition(lockingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.4);
 
-        viperSlideMotor.setTargetPosition(-8000);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        viperSlideMotor.setPower(1);
+        viperSlideMotor.setPower(-0.8);
+        while (viperSlideMotor.getCurrentPosition() > -7567) {
 
-        intakeServo.setPower(0.5);
+        }
+        viperSlideMotor.setPower(0);
+
+        sleep(1000000);
+
+
+//        intakeServo.setPower(0.5);
     }
 }
