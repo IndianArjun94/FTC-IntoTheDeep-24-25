@@ -7,10 +7,10 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton4_EmptyAuton")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton_Parking")
 
 
-public class ParkingAuton extends OpMode {
+public class ParkingAuton extends LinearOpMode {
 
     //   Name Motors
     private DcMotor frontLeft;
@@ -18,32 +18,27 @@ public class ParkingAuton extends OpMode {
     private DcMotor backLeft;
     private DcMotor backRight;
 
-    @Override
-    public void init() {
 
-        // initialize
+    @Override
+    public void runOpMode() throws InterruptedException {
+
         frontLeft = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRight = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeft = hardwareMap.get(DcMotor.class, "backLeftMotor");
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
 
-    }
-
-    @Override
-    public void loop() {
-// code
+        waitForStart();
         frontLeft.setPower(0.3);
-        frontRight.setPower(-0.3);
-        backLeft.setPower(-0.3);
+        frontRight.setPower(0.3);
+        backLeft.setPower(0.3);
         backRight.setPower(0.3);
 
-        // sleep for 3 seconds
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        sleep(3500);
 
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
     }
 }
 
