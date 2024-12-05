@@ -10,14 +10,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 @com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton_Parking")
 
 
-
-public class ParkingAuton extends LinearOpMode {
+public class Stay_Still extends LinearOpMode {
 
     //   Name Motors
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
     private DcMotor backRight;
+
 
 
     @Override
@@ -29,12 +29,8 @@ public class ParkingAuton extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
 
         waitForStart();
-        frontLeft.setPower(0.3);
-        frontRight.setPower(0.3);
-        backLeft.setPower(0.3);
-        backRight.setPower(0.3);
 
-        sleep(3500);
+        sleep(35000);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
