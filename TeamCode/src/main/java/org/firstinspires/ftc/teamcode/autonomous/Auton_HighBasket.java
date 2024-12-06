@@ -73,7 +73,7 @@ public class Auton_HighBasket extends LinearOpMode {
         backLeftMotor.setPower(-0.4f);
         backRightMotor.setPower(0.6f);
 
-        sleep(135);
+        sleep(100);
         stopMotors();
 
         armMotor.setPower(0.8);
