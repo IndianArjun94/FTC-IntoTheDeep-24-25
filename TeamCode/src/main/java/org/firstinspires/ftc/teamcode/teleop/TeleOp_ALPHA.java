@@ -128,7 +128,6 @@ public class TeleOp_ALPHA extends OpMode {
             intakeServo.setPower(0);
         }
 
-
         update();
     }
 }

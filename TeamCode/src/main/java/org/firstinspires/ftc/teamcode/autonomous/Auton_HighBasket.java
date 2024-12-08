@@ -16,6 +16,8 @@ public class Auton_HighBasket extends LinearOpMode {
 
     public CRServo intakeServo;
 
+    public int rightAngleWaitTime = 900;
+
     public void moveForward(double power) {
         frontLeftMotor.setPower(power);
         frontRightMotor.setPower(power);
@@ -59,25 +61,31 @@ public class Auton_HighBasket extends LinearOpMode {
 
         waitForStart();
 
-        rotateLeft(0.5f);
-        sleep(700);
-        moveForward(0.5f);
-        sleep(1450);
-        rotateLeft(0.5f);
-        sleep(375);
-        moveForward(0.25);
-        sleep(135);
+        moveForward(0.5f); // move forward a little bit
+        sleep(300);
 
-        frontLeftMotor.setPower(0.4f);
-        frontRightMotor.setPower(-0.6f);
-        backLeftMotor.setPower(-0.4f);
-        backRightMotor.setPower(0.6f);
+        rotateLeft(0.5f); // turn left 90 degrees
+        sleep(rightAngleWaitTime);
 
-        sleep(135);
+        moveForward(0.5f); // go to the baskets
+        sleep(1385);
+
+        rotateLeft(0.5f);
+        sleep(rightAngleWaitTime/2);
+
+        moveForward(0.4);
+        sleep(102);
+
+//        frontLeftMotor.setPower(0.4f);
+//        frontRightMotor.setPower(-0.6f);
+//        backLeftMotor.setPower(-0.4f);
+//        backRightMotor.setPower(0.6f);
+
+        sleep(75);
         stopMotors();
 
         armMotor.setPower(0.8);
-        sleep(1000);
+        sleep(1190);
         int lockingPosition = armMotor.getCurrentPosition();
         armMotor.setTargetPosition(lockingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -89,9 +97,19 @@ public class Auton_HighBasket extends LinearOpMode {
         }
         viperSlideMotor.setPower(0);
 
-        sleep(1000000);
+        intakeServo.setPower(0.5);
 
+        sleep(2500);
 
-//        intakeServo.setPower(0.5);
+        viperSlideMotor.setPower(0.8);
+        while (viperSlideMotor.getCurrentPosition() < 0) {
+
+        }
+        viperSlideMotor.setPower(0);
+
+        armMotor.setPower(-0.6);
+        sleep(1165);
+        armMotor.setPower(0);
+
     }
 }
