@@ -93,7 +93,7 @@ public class Auton_HighBasket extends LinearOpMode {
 
         intakeServo.setPower(0.5);
 
-        sleep(2500); // put out sample
+        sleep(750); // put out sample
 
         intakeServo.setPower(0);
 
@@ -122,14 +122,14 @@ public class Auton_HighBasket extends LinearOpMode {
         stopMotors();
 
         armMotor.setPower(0.5f); // move the arm up a little bit
-        sleep(300);
+        sleep(400);
         lockingPosition = armMotor.getCurrentPosition();
         armMotor.setTargetPosition(lockingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.4);
 
         viperSlideMotor.setPower(-0.5); // extend viper slide a little bit
-        while (viperSlideMotor.getCurrentPosition() > -400) {
+        while (viperSlideMotor.getCurrentPosition() > -650) {
 
         }
         viperSlideMotor.setPower(0);
@@ -138,6 +138,7 @@ public class Auton_HighBasket extends LinearOpMode {
         sleep(1000);
 
         intakeServo.setPower(-0.5f); // take in floor sample #1
+        sleep(2000);
 
         sleep(1000000);
     }
