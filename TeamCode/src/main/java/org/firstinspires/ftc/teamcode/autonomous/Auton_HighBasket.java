@@ -16,7 +16,7 @@ public class Auton_HighBasket extends LinearOpMode {
 
     public CRServo intakeServo;
 
-    public int rightAngleWaitTime = 900;
+    public int rightAngleWaitTime = 720;
 
     public void moveForward(double power) {
         frontLeftMotor.setPower(power);
@@ -62,7 +62,7 @@ public class Auton_HighBasket extends LinearOpMode {
         waitForStart();
 
         moveForward(0.5f); // move forward a little bit
-        sleep(300);
+        sleep(125);
 
         rotateLeft(0.5f); // turn left 90 degrees
         sleep(rightAngleWaitTime);
@@ -70,46 +70,75 @@ public class Auton_HighBasket extends LinearOpMode {
         moveForward(0.5f); // go to the baskets
         sleep(1385);
 
-        rotateLeft(0.5f);
-        sleep(rightAngleWaitTime/2);
+        rotateLeft(0.5f); // rotate to face the baskets
+        sleep(295);
 
-        moveForward(0.4);
-        sleep(102);
+        moveForward(-0.5f); // back up a little bit
+        sleep(120);
 
-//        frontLeftMotor.setPower(0.4f);
-//        frontRightMotor.setPower(-0.6f);
-//        backLeftMotor.setPower(-0.4f);
-//        backRightMotor.setPower(0.6f);
-
-        sleep(75);
         stopMotors();
 
         armMotor.setPower(0.8);
-        sleep(1190);
+        sleep(1100);
         int lockingPosition = armMotor.getCurrentPosition();
         armMotor.setTargetPosition(lockingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.4);
 
-        viperSlideMotor.setPower(-0.8);
-        while (viperSlideMotor.getCurrentPosition() > -7567) {
+        viperSlideMotor.setPower(-1);
+        while (viperSlideMotor.getCurrentPosition() > -7500) {
 
         }
-        viperSlideMotor.setPower(0);
+        viperSlideMotor.setPower(0); // viper slide up to high basket
 
         intakeServo.setPower(0.5);
 
-        sleep(2500);
+        sleep(2500); // put out sample
 
-        viperSlideMotor.setPower(0.8);
+        intakeServo.setPower(0);
+
+        viperSlideMotor.setPower(1);
         while (viperSlideMotor.getCurrentPosition() < 0) {
+
+        }
+        viperSlideMotor.setPower(0); // viper slide down
+
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setPower(-0.8); // arm down
+        sleep(1000);
+        armMotor.setPower(0);
+
+        rotateRight(0.5f); // rotate to face floor sample
+        sleep(500);
+
+        moveForward(-0.5); // move back to floor sample
+        sleep(350);
+
+        frontLeftMotor.setPower(0.5f); // move laterally to the floor sample
+        backLeftMotor.setPower(-0.5f);
+        frontRightMotor.setPower(-0.5f);
+        backRightMotor.setPower(0.5f);
+        sleep(675);
+        stopMotors();
+
+        armMotor.setPower(0.5f); // move the arm up a little bit
+        sleep(300);
+        lockingPosition = armMotor.getCurrentPosition();
+        armMotor.setTargetPosition(lockingPosition);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.4);
+
+        viperSlideMotor.setPower(-0.5); // extend viper slide a little bit
+        while (viperSlideMotor.getCurrentPosition() > -400) {
 
         }
         viperSlideMotor.setPower(0);
 
-        armMotor.setPower(-0.6);
-        sleep(1165);
-        armMotor.setPower(0);
+        armMotor.setPower(0); // arm down
+        sleep(1000);
 
+        intakeServo.setPower(-0.5f); // take in floor sample #1
+
+        sleep(1000000);
     }
 }
