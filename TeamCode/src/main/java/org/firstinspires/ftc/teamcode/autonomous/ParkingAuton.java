@@ -29,17 +29,33 @@ public class ParkingAuton extends LinearOpMode {
         backRight = hardwareMap.get(DcMotor.class, "backRightMotor");
 
         waitForStart();
+        // forward
         frontLeft.setPower(0.3);
         frontRight.setPower(0.3);
         backLeft.setPower(0.3);
         backRight.setPower(0.3);
 
-        sleep(3500);
+        sleep(250);
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
+
+        // sideways
+        frontLeft.setPower(0.3);
+        frontRight.setPower(-0.3);
+        backLeft.setPower(-0.3);
+        backRight.setPower(0.3);
+
+        sleep(2000);
+
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+
+
     }
 }
 
