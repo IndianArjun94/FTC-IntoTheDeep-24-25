@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton_Parking")
+@com.qualcomm.robotcore.eventloop.opmode.Autonomous(name = "Auton_Stay-Still")
 
 
 public class Stay_Still extends LinearOpMode {
