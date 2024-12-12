@@ -74,32 +74,34 @@ public class Auton_HighBasket extends LinearOpMode {
         sleep(295);
 
         moveForward(-0.5f); // back up a little bit
-        sleep(120);
+        sleep(125);
 
         stopMotors();
 
         armMotor.setPower(0.8);
-        sleep(1100);
+        sleep(1135);
         int lockingPosition = armMotor.getCurrentPosition();
         armMotor.setTargetPosition(lockingPosition);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         armMotor.setPower(0.4);
 
-        viperSlideMotor.setPower(-1);
-        while (viperSlideMotor.getCurrentPosition() > -7500) {
-
+        viperSlideMotor.setPower(-0.8);
+        while (viperSlideMotor.getCurrentPosition() > -2850) {
+            opModeIsActive();
         }
         viperSlideMotor.setPower(0); // viper slide up to high basket
 
         intakeServo.setPower(0.5);
 
-        sleep(2500); // put out sample
+        sleep(2000); // put out sample
 
         intakeServo.setPower(0);
 
         viperSlideMotor.setPower(1);
-        while (viperSlideMotor.getCurrentPosition() < 0) {
-
+        while (viperSlideMotor.getCurrentPosition() < -125) {
+            opModeIsActive();
+            telemetry.addData("Viper Slide Position: ", Float.toString(viperSlideMotor.getCurrentPosition()));
+            telemetry.update();
         }
         viperSlideMotor.setPower(0); // viper slide down
 
@@ -112,7 +114,7 @@ public class Auton_HighBasket extends LinearOpMode {
         sleep(500);
 
         moveForward(-0.5); // move back to floor sample
-        sleep(350);
+        sleep(280);
 
         frontLeftMotor.setPower(0.5f); // move laterally to the floor sample
         backLeftMotor.setPower(-0.5f);
@@ -129,7 +131,7 @@ public class Auton_HighBasket extends LinearOpMode {
         armMotor.setPower(0.4);
 
         viperSlideMotor.setPower(-0.5); // extend viper slide a little bit
-        while (viperSlideMotor.getCurrentPosition() > -400) {
+        while (viperSlideMotor.getCurrentPosition() > -200) {
 
         }
         viperSlideMotor.setPower(0);
@@ -138,6 +140,24 @@ public class Auton_HighBasket extends LinearOpMode {
         sleep(1000);
 
         intakeServo.setPower(-0.5f); // take in floor sample #1
+
+        moveForward(0.5f);
+        sleep(500);
+        moveForward(-0.25f);
+        sleep(650);
+
+        intakeServo.setPower(0);
+
+        frontLeftMotor.setPower(-0.5f); // move laterally away from the floor sample
+        backLeftMotor.setPower(0.5f);
+        frontRightMotor.setPower(0.5f);
+        backRightMotor.setPower(-0.5f);
+        sleep(500);
+        rotateLeft(0.5f); // rotate to face the baskets
+        sleep(320);
+        moveForward(0.5f);
+        sleep(400);
+        stopMotors();
 
         sleep(1000000);
     }
