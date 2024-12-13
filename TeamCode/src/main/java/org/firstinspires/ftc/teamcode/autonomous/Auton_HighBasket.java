@@ -62,7 +62,7 @@ public class Auton_HighBasket extends LinearOpMode {
         waitForStart();
 
         moveForward(0.5f); // move forward a little bit
-        sleep(125);
+        sleep(150);
 
         rotateLeft(0.5f); // turn left 90 degrees
         sleep(rightAngleWaitTime);
@@ -74,9 +74,11 @@ public class Auton_HighBasket extends LinearOpMode {
         sleep(295);
 
         moveForward(-0.5f); // back up a little bit
-        sleep(125);
+        sleep(120);
 
         stopMotors();
+
+        sleep(500);
 
         armMotor.setPower(0.8);
         sleep(1135);
@@ -86,7 +88,7 @@ public class Auton_HighBasket extends LinearOpMode {
         armMotor.setPower(0.4);
 
         viperSlideMotor.setPower(-0.8);
-        while (viperSlideMotor.getCurrentPosition() > -2850) {
+        while (viperSlideMotor.getCurrentPosition() > -2790) {
             opModeIsActive();
         }
         viperSlideMotor.setPower(0); // viper slide up to high basket
@@ -120,8 +122,9 @@ public class Auton_HighBasket extends LinearOpMode {
         backLeftMotor.setPower(-0.5f);
         frontRightMotor.setPower(-0.5f);
         backRightMotor.setPower(0.5f);
-        sleep(675);
+        sleep(700);
         stopMotors();
+        sleep(250);
 
         armMotor.setPower(0.5f); // move the arm up a little bit
         sleep(300);
@@ -152,12 +155,52 @@ public class Auton_HighBasket extends LinearOpMode {
         backLeftMotor.setPower(0.5f);
         frontRightMotor.setPower(0.5f);
         backRightMotor.setPower(-0.5f);
-        sleep(500);
+        sleep(535);
         rotateLeft(0.5f); // rotate to face the baskets
         sleep(320);
-        moveForward(0.5f);
-        sleep(400);
+        moveForward(0.5f); // move forward towards the baskets
+        sleep(580);
         stopMotors();
+
+        armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        armMotor.setPower(0.8);
+        sleep(1195);
+        lockingPosition = armMotor.getCurrentPosition();
+        armMotor.setTargetPosition(lockingPosition);
+        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armMotor.setPower(0.4);
+
+        viperSlideMotor.setPower(-0.8);
+        while (viperSlideMotor.getCurrentPosition() > -2925) {
+            opModeIsActive();
+        }
+        viperSlideMotor.setPower(0); // viper slide up to high basket
+
+        intakeServo.setPower(0.5);
+
+        sleep(1500);
+
+        intakeServo.setPower(0);
+
+        viperSlideMotor.setPower(1);
+        while (viperSlideMotor.getCurrentPosition() < -125) {
+            opModeIsActive();
+            telemetry.addData("Viper Slide Position: ", Float.toString(viperSlideMotor.getCurrentPosition()));
+            telemetry.update();
+        }
+        viperSlideMotor.setPower(0); // viper slide down
+
+        armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        armMotor.setPower(-0.8); // arm down
+        sleep(1000);
+        armMotor.setPower(0);
+
+        rotateRight(0.5f);
+        sleep(765);
+        moveForward(-0.8f);
+        sleep(2000);
+        stopMotors();
+
 
         sleep(1000000);
     }
