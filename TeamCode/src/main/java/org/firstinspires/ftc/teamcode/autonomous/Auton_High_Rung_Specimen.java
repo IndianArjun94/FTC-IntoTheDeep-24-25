@@ -38,11 +38,12 @@ public class Auton_High_Rung_Specimen extends LinearOpMode {
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
 
-        armRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+//        armRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         waitForStart();
 
+        //forward to position
         frontLeft.setPower(0.5);
         frontRight.setPower(0.5);
         backLeft.setPower(0.5);
@@ -59,41 +60,60 @@ public class Auton_High_Rung_Specimen extends LinearOpMode {
 
         //arm up
         armRotationMotor.setPower(0.5);
-        sleep(2600);
-        armRotationMotor.setPower(0);
+        sleep(2500);
+        int lockingPosition = armRotationMotor.getCurrentPosition();
+        armRotationMotor.setTargetPosition(lockingPosition);
+        armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armRotationMotor.setPower(0.4);
 
 
         //pulls specimen in, in case
-        intakeServo.setPower(0.3);
-        sleep(200);
+        intakeServo.setPower(0.9);
+        sleep(35);
         intakeServo.setPower(0);
 
-
+        //viperslide out
         viperSlide.setPower(-0.25);
-        sleep(900);
+        sleep(400);
         viperSlide.setPower(0);
 
         //goes forward (robot)
-        frontLeft.setPower(0.5);
-        frontRight.setPower(0.5);
-        backLeft.setPower(0.5);
-        backRight.setPower(0.5);
-        armRotationMotor.setPower(0.40);
-        viperSlide.setPower(-0.245);
-        sleep(890);
-        armRotationMotor.setPower(0);
+        frontLeft.setPower(0.275);
+        frontRight.setPower(0.275);
+        backLeft.setPower(0.275);
+        backRight.setPower(0.275);
+        viperSlide.setPower(-0.235);
+        sleep(1800);
+        lockingPosition = armRotationMotor.getCurrentPosition();
+        armRotationMotor.setTargetPosition(lockingPosition);
+        armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armRotationMotor.setPower(0.4);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
         viperSlide.setPower(0);
-
-        sleep(1000);
-
-        armRotationMotor.setPower(-0.9);
-        sleep(230);
         armRotationMotor.setPower(0);
 
+        sleep(50);
+
+        //arm down, specimen on bar
+        viperSlide.setPower(0.275);
+        armRotationMotor.setPower(-0.75);
+        sleep(300);
+        armRotationMotor.setPower(0);
+        viperSlide.setPower(0);
+
+        armRotationMotor.setPower(0.5);
+        sleep(25);
+        lockingPosition = armRotationMotor.getCurrentPosition();
+        armRotationMotor.setTargetPosition(lockingPosition);
+        armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armRotationMotor.setPower(0.4);
+
+
+
+        //back to not hit lower bar
         frontLeft.setPower(-0.5);
         frontRight.setPower(-0.5);
         backLeft.setPower(-0.5);
@@ -104,32 +124,32 @@ public class Auton_High_Rung_Specimen extends LinearOpMode {
         backLeft.setPower(0);
         backRight.setPower(0);
 
+
         sleep(1000);
 
+        //arm down
         armRotationMotor.setPower(-0.5);
         sleep(120);
         armRotationMotor.setPower(0);
 
+        //viper back
         viperSlide.setPower(0.25);
         sleep(900);
         viperSlide.setPower(0);
 
-        //armRotationMotor.setPower(0.5);
-        //sleep(600);
-        //armRotationMotor.setPower(0);
-
+        //goes to park (back)
         frontLeft.setPower(-0.5);
         frontRight.setPower(-0.5);
         backLeft.setPower(-0.5);
         backRight.setPower(-0.5);
-        armRotationMotor.setPower(0.05);
-        sleep(950);
+        sleep(800);
         frontLeft.setPower(0);
         frontRight.setPower(0);
         backLeft.setPower(0);
         backRight.setPower(0);
-        armRotationMotor.setPower(0);
 
+
+        //goes to park (forward positioning)
         frontLeft.setPower(0.8);
         frontRight.setPower(0.8);
         backLeft.setPower(0.8);
@@ -140,12 +160,19 @@ public class Auton_High_Rung_Specimen extends LinearOpMode {
         backLeft.setPower(0);
         backRight.setPower(0);
 
+        armRotationMotor.setPower(1);
+        sleep(200);
+        lockingPosition = armRotationMotor.getCurrentPosition();
+        armRotationMotor.setTargetPosition(lockingPosition);
+        armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        armRotationMotor.setPower(0.4);
 
+
+//goes to park (right)
         frontLeft.setPower(0.5);
         frontRight.setPower(-0.5);
         backLeft.setPower(-0.5);
         backRight.setPower(0.5);
-        armRotationMotor.setPower(0.15);
         sleep(2150);
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -153,7 +180,8 @@ public class Auton_High_Rung_Specimen extends LinearOpMode {
         backRight.setPower(0);
         armRotationMotor.setPower(0);
 
-        sleep(1000);
+        //rest
+        sleep(5000);
 
     }
 }
