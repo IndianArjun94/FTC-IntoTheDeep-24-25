@@ -1,12 +1,17 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+
+import org.firstinspires.ftc.teamcode.Commons;
 
 @Autonomous(name = "PID Testing", group = "Test")
-public class PIDTesting {
+public class PIDTesting extends LinearOpMode {
 
-    public final double ticksPerInch = 41.8;
+    @Override
+    public void runOpMode() throws InterruptedException {
+        Commons.init(hardwareMap);
 
-    public IMU imu;
+        Commons.PID_rotate(90, this::opModeIsActive);
+    }
 }
