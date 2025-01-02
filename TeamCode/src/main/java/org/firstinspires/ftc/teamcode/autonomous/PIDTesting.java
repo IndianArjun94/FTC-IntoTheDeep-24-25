@@ -10,8 +10,8 @@ public class PIDTesting extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        Commons.init(hardwareMap);
+        Commons.init(hardwareMap, this::opModeIsActive);
 
-        Commons.PID_rotate(90, this::opModeIsActive);
+        Commons.PID_rotate(90, false);
     }
 }
