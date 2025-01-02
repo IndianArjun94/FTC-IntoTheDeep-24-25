@@ -86,6 +86,10 @@ public class Commons {
         double maxI = 0.3;
 
         while ((error != 0) && opModeIsActive.getAsBoolean()) {
+//            Checks
+            if (Math.abs(I) > maxI) {
+                I = maxI;
+            }
 //            PID Calculations
             P = error/originalError * Kp;
             I += error/originalError * Ki;
@@ -94,18 +98,14 @@ public class Commons {
             Commons.startRight(P+I+D);
 //            Update Variables
             error = targetAngle - Commons.getYawAngle();
-//            Checks
-            if (Math.abs(I) > maxI) {
-                I = maxI;
-            }
-
+//            Sleep to prevent CPU stress
             Thread.sleep(5);
         }
 
         Commons.stopMotors();
     }
 
-    public static void PID_forward(double targetInches, BooleanSupplier opModeIsActive) {
+    public static void PID_forward(double targetInches, BooleanSupplier opModeIsActive) throws InterruptedException {
         if (!initialized) {
             System.err.println("Initialize commons first! - \"Commons.init();\"");
             return;
@@ -115,6 +115,7 @@ public class Commons {
         double targetPosition = currentPosition + (targetInches * ticksPerInch);
 
         double error = targetPosition - currentPosition;
+        double originalError = targetPosition - currentPosition;
 
         double P;
         double I = 0;
@@ -124,9 +125,26 @@ public class Commons {
         double Ki = 0.001f;
         double Kd = 0.08f;
 
-        while ((error != 0) && opModeIsActive.getAsBoolean()) {
+        double maxI = 0.3f;
 
+        while ((error != 0) && opModeIsActive.getAsBoolean()) {
+//            Checks
+            if (Math.abs(I) > maxI) {
+                I = maxI;
+            }
+//            PID Calculations
+            P = error/originalError * Kp;
+            I = error/originalError * Ki;
+            D = error/originalError * Kd;
+//            Powering Motors
+            Commons.startForward(P+I+D);
+//            Updating Variables
+            error = targetPosition - getMotorPosition(0);
+//            Sleep to prevent CPU stress
+            Thread.sleep(5);
         }
+
+        Commons.stopMotors();
     }
 
 //    Robot Values Getters
@@ -166,6 +184,18 @@ public class Commons {
     }
 
 //    Basic Robot Movement
+
+    public static void startForward(double speed) {
+        if (!initialized) {
+            System.err.println("Initialize commons first! - \"Commons.init();\"");
+            return;
+        }
+
+        frontLeftMotor.setPower(speed);
+        frontRightMotor.setPower(speed);
+        backLeftMotor.setPower(speed);
+        backRightMotor.setPower(speed);
+    }
 
     public static void startLeft(double speed) {
         if (!initialized) {
