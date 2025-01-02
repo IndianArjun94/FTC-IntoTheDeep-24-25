@@ -105,7 +105,7 @@ public class Commons {
         Commons.stopMotors();
     }
 
-    public static void PID_forward(double targetInches, BooleanSupplier opModeIsActive) throws InterruptedException {
+    public static void PID_forward(double targetInches) throws InterruptedException {
         if (!initialized) {
             System.err.println("Initialize commons first! - \"Commons.init();\"");
             return;
@@ -146,6 +146,49 @@ public class Commons {
 
         Commons.stopMotors();
     }
+
+//    public static void PID_goto(double targetInchesX, double targetInchesY, boolean XcoordFirst) {
+//        if (!initialized) {
+//            System.err.println("Initialize commons first! - \"Commons.init();\"");
+//            return;
+//        }
+//
+//        int currentPositionX = getMotorPosition(0);
+//        int currentPositionY = get
+//        double targetPosition = currentPositionX + (targetInches * ticksPerInch);
+//
+//        double error = targetPosition - currentPositionX;
+//        double originalError = targetPosition - currentPositionX;
+//
+//        double P;
+//        double I = 0;
+//        double D;
+//
+//        double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
+//        double Ki = 0.001f;
+//        double Kd = 0.08f;
+//
+//        double maxI = 0.3f;
+//
+//        while ((error != 0) && opModeIsActive.getAsBoolean()) {
+////            Checks
+//            if (Math.abs(I) > maxI) {
+//                I = maxI;
+//            }
+////            PID Calculations
+//            P = error/originalError * Kp;
+//            I = error/originalError * Ki;
+//            D = error/originalError * Kd;
+////            Powering Motors
+//            Commons.startForward(P+I+D);
+////            Updating Variables
+//            error = targetPosition - getMotorPosition(0);
+////            Sleep to prevent CPU stress
+//            Thread.sleep(5);
+//        }
+//
+//        Commons.stopMotors();
+//    }
 
 //    Robot Values Getters
     public static double getYawAngle() {
