@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Commons;
 
-@Autonomous(name = "PID Testing (Turn)", group = "Test")
-public class PIDTesting extends LinearOpMode {
+@Autonomous(name = "PID Testing (Forward)", group = "Test")
+public class PIDTesting2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -14,6 +14,10 @@ public class PIDTesting extends LinearOpMode {
 
         waitForStart();
 
-        Commons.PID_rotate(90);
+        Commons.PID_forward(12);
+
+        Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.35f;
+
+        Commons.PID_forward(12);
     }
 }
