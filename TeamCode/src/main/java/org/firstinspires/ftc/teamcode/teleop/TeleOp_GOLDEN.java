@@ -56,6 +56,8 @@ public class TeleOp_GOLDEN extends OpMode {
 
     @Override
     public void loop() {
+
+
         frontLeftMotorSpeed = 0;
         frontRightMotorSpeed = 0;
         backLeftMotorSpeed = 0;
