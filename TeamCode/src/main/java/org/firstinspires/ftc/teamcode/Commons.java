@@ -116,6 +116,7 @@ public class Commons {
         Commons.stopMotors();
     }
 
+    @Deprecated
     public static void PID_forward(double targetInches) throws InterruptedException {
         if (!initialized) {
             System.err.println("Initialize commons first! - \"Commons.init();\"");
