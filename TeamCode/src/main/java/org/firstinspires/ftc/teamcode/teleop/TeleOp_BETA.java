@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -102,31 +104,40 @@ public class TeleOp_BETA extends OpMode {
             if (armMotorUnlocked) {
                 armMotorUnlocked = false;
                 armIdlePosition = armMotor.getCurrentPosition();
-                armMotor.setTargetPosition((int)armIdlePosition);
+                armMotor.setTargetPosition((int) armIdlePosition);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.4);
+
             }
-        }
 
 //        Viper Slide
-        if (gamepad2.right_trigger != 0) { // Extend
-            viperSlideMotor.setPower(-gamepad2.right_trigger);
-        } else if (gamepad2.left_trigger != 0) { // Retract
-            viperSlideMotor.setPower(gamepad2.left_trigger);
-        } else {
-            viperSlideMotor.setPower(0);
-        }
+            if (gamepad2.right_trigger != 0) { // Extend
+                viperSlideMotor.setPower(-gamepad2.right_trigger);
+            } else if (gamepad2.left_trigger != 0) { // Retract
+                viperSlideMotor.setPower(gamepad2.left_trigger);
+            } else {
+                viperSlideMotor.setPower(0);
+            }
 
 //        Intake Servo
-        if (gamepad2.right_bumper) {
-            intakeServo.setPower(1);
-        } else if (gamepad2.left_bumper) {
-            intakeServo.setPower(-1);
-        } else if (gamepad2.right_bumper && gamepad2.left_bumper) {
-            intakeServo.setPower(0);
+            if (gamepad2.right_bumper) {
+                intakeServo.setPower(1);
+            } else if (gamepad2.left_bumper) {
+                intakeServo.setPower(-1);
+            } else if (gamepad2.right_bumper && gamepad2.left_bumper) {
+                intakeServo.setPower(0);
+            }
+
+            if (gamepad2.y) {
+                viperSlideMotor.setTargetPosition(-600);
+                intakeServo.setPower(-1);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                intakeServo.setPower(0);
+                update();
+            }
         }
-
-
-        update();
     }
 }

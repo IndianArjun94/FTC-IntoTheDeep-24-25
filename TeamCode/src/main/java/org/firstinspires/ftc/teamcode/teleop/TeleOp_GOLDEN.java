@@ -125,7 +125,15 @@ public class TeleOp_GOLDEN extends OpMode {
         } else if (gamepad2.x) {
             intakeServo.setPower(0);
         }
-
+//       Stuck on bar
+        if (gamepad1.dpad_down) {
+            backLeftMotor.setPower(-1);
+            backRightMotor.setPower(-1);
+            if (gamepad1.dpad_down) {
+                backLeftMotor.setPower(0);
+                backRightMotor.setPower(0);
+            }
+        }
 
         update();
     }
