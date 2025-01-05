@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import static java.lang.Thread.sleep;
+
 import android.graphics.drawable.PictureDrawable;
 
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
@@ -254,6 +256,20 @@ public class Commons {
 
 //    Basic Robot Movement
 
+    public static void moveForward(int inches, double speed) throws InterruptedException {
+        int targetPosition = (int)(inches * ticksPerInch) + getMotorPosition(0);
+        setMotorTargetPosition(targetPosition);
+        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+        startForward(speed);
+
+        while (frontLeftMotor.isBusy() && opModeIsActive.getAsBoolean()) {
+            sleep(1);
+        }
+
+        stopMotors();
+        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
     public static void startForward(double speed) {
         if (!initialized) {
             System.err.println("Initialize commons first! - \"Commons.init();\"");
@@ -310,5 +326,29 @@ public class Commons {
 
         telemetry.addData(value, value1);
         telemetry.update();
+    }
+
+    public static void setMotorMode(DcMotor.RunMode runMode) {
+        if (!initialized) {
+            System.err.println("Initialize commons first! - \"Commons.init();\"");
+            return;
+        }
+
+        frontLeftMotor.setMode(runMode);
+        frontRightMotor.setMode(runMode);
+        backLeftMotor.setMode(runMode);
+        backRightMotor.setMode(runMode);
+    }
+
+    public static void setMotorTargetPosition(int targetPosition) {
+        if (!initialized) {
+            System.err.println("Initialize commons first! - \"Commons.init();\"");
+            return;
+        }
+
+        frontLeftMotor.setTargetPosition(targetPosition);
+        frontRightMotor.setTargetPosition(targetPosition);
+        backLeftMotor.setTargetPosition(targetPosition);
+        backRightMotor.setTargetPosition(targetPosition);
     }
 }
