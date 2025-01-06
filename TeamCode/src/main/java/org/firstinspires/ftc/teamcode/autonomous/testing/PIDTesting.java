@@ -14,6 +14,11 @@ public class PIDTesting extends LinearOpMode {
 
         waitForStart();
 
-        Commons.PID_rotate(90);
+        Commons.PID_forward(24, 0.7);
+        Commons.lateralRight(36, 0.6);
+        Commons.PID_backward(24, 0.3);
+        Commons.lateralLeft(36, 0.5);
+        Commons.PID_rotateRight(90, 0.5);
+        Commons.PID_rotateLeft(90, 1);
     }
 }

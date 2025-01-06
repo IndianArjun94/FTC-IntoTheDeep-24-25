@@ -2,10 +2,7 @@ package org.firstinspires.ftc.teamcode;
 
 import static java.lang.Thread.sleep;
 
-import android.graphics.drawable.PictureDrawable;
-
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -40,6 +37,8 @@ public class Commons {
 
     public static Telemetry telemetry;
 
+    public static boolean isBusy = false;
+
     public static void init(HardwareMap hardwareMap, BooleanSupplier opModeIsActive, Telemetry telemetry) {
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
@@ -63,11 +62,18 @@ public class Commons {
         Commons.telemetry = telemetry;
     }
 
-    public static void PID_rotate(double targetTurnAngle) throws InterruptedException {
+    public static int initWarning() {
         if (!initialized) {
             System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
+            return 1;
         }
+        return 0;
+    }
+
+    public static void PID_rotateLeft(double targetTurnAngle, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
 
         imu.resetYaw();
 
@@ -93,78 +99,183 @@ public class Commons {
 
         double maxI = 0.6;
 
-        while ((error >= -3 || error <= 3) && opModeIsActive.getAsBoolean()) {
+        while ((error <= -2 || error >= 2) && opModeIsActive.getAsBoolean()) {
 
-            print("Angle", Double.toString(Commons.getYawAngle()));
+//            print("Angle", Double.toString(Commons.getYawAngle()));
             print("Error", Double.toString(error));
 
 //            Checks
             if (Math.abs(I) > maxI) {
-                I = maxI;
+                I = maxI - error/originalError * Ki;
             }
 //            PID Calculations
             P = error/originalError * Kp;
             I += error/originalError * Ki;
             D = error/originalError * Kd;
 //            Powering Motors
-            Commons.startLeft(P+I+D);
+            Commons.startRotateLeft((P+I+D)*speed);
 //            Update Variables
             error = targetAngle - getYawAngle();
 //            Sleep to prevent CPU stress
-//            Thread.sleep(5);
+            Thread.sleep(5);
 
         }
 
+        Commons.stopMotorsRotateLeft();
         Commons.stopMotors();
+
+        isBusy = false;
     }
 
-    @Deprecated
-    public static void PID_forward(double targetInches) throws InterruptedException {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
+    public static void PID_rotateRight(double targetTurnAngle, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        imu.resetYaw();
+
+        double currentAngle = Commons.getYawAngle(); // The current angle
+        double targetAngle; // The final angle we want to be at when the turn is finished
+
+        targetAngle = -targetTurnAngle;
+
+        if (targetAngle < 0.05 && targetAngle > -0.05) {
             return;
         }
 
-        int currentPosition = getMotorPosition(0);
-        double targetPosition = currentPosition + (targetInches * ticksPerInch);
-
-        double error = targetPosition - currentPosition;
-        double originalError = targetPosition - currentPosition;
+        double error = targetAngle - currentAngle; // How much we have to turn to get to targetAngle on the IMU YAW (degrees; right is positive)
+        double originalError = targetAngle - currentAngle;
 
         double P;
         double I = 0;
         double D;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
-        double Ki = 0.005f;
-        double Kd = 0.08f;
+        double Ki = 0.005;
+        double Kd = -0.005;
 
-        double maxI = 0.3f;
+        double maxI = 0.6;
 
-        while ((error != 0) && opModeIsActive.getAsBoolean()) {
+        while ((error <= -2 || error >= 2) && opModeIsActive.getAsBoolean()) {
+
+//            print("Angle", Double.toString(Commons.getYawAngle()));
+            print("Error", Double.toString(error));
+
 //            Checks
             if (Math.abs(I) > maxI) {
-                I = maxI;
+                I = maxI - error/originalError * Ki;
             }
 //            PID Calculations
             P = error/originalError * Kp;
-            I = error/originalError * Ki;
+            I += error/originalError * Ki;
             D = error/originalError * Kd;
 //            Powering Motors
-            Commons.startForward(P+I+D);
-//            Updating Variables
-            error = targetPosition - getMotorPosition(0);
+            Commons.startRotateRight((P+I+D)*speed);
+//            Update Variables
+            error = targetAngle - getYawAngle();
+//            Sleep to prevent CPU stress
+            Thread.sleep(5);
+
         }
 
+        Commons.stopMotorsRotateRight();
         Commons.stopMotors();
+
+        isBusy = false;
+    }
+
+    public static void PID_forward(int targetInches, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        int currentPosition = frontRightMotor.getCurrentPosition();
+        double targetPosition = currentPosition - (targetInches * ticksPerInch);
+
+        double error = targetPosition - currentPosition;
+        double originalError = targetPosition - currentPosition;
+
+        double P;
+        double I = 0.1;
+        double D;
+
+        double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
+        double Ki = 0.02f;
+        double Kd = 0.08f;
+
+        double maxI = 0.5f;
+
+
+        while ((error <= -ticksPerInch || error >= ticksPerInch) && opModeIsActive.getAsBoolean()) {
+//            Checks
+            if (Math.abs(I) > maxI) {
+                I = maxI - error/originalError * Ki;
+            }
+//            PID Calculations
+            P = error/originalError * Kp;
+            I += error/originalError * Ki;
+            D = error/originalError * Kd;
+//            Powering Motors
+            Commons.startForward((P+I+D)*speed);
+//            Updating Variables
+            error = targetPosition - frontRightMotor.getCurrentPosition();
+        }
+
+
+        Commons.stopMotorsForward();
+        Commons.stopMotors();
+
+        isBusy = false;
+    }
+
+    public static void PID_backward(int targetInches, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        int currentPosition = frontRightMotor.getCurrentPosition();
+        double targetPosition = currentPosition - (-targetInches * ticksPerInch);
+
+        double error = targetPosition - currentPosition;
+        double originalError = targetPosition - currentPosition;
+
+        double P;
+        double I = 0.1;
+        double D;
+
+        double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
+        double Ki = 0.02f;
+        double Kd = 0.08f;
+
+        double maxI = 0.5f;
+
+        while ((error <= -ticksPerInch || error >= ticksPerInch) && opModeIsActive.getAsBoolean()) {
+//            Checks
+            if (Math.abs(I) > maxI) {
+                I = maxI - error/originalError * Ki;
+            }
+//            PID Calculations
+            P = error/originalError * Kp;
+            I += error/originalError * Ki;
+            D = error/originalError * Kd;
+//            Powering Motors
+            Commons.startBackward((P+I+D)*speed);
+//            Updating Variables
+            error = targetPosition - frontRightMotor.getCurrentPosition();
+        }
+
+
+        Commons.stopMotorsBackward();
+        Commons.stopMotors();
+
+        isBusy = false;
     }
 
     @Deprecated
-    public static void PID_goto(double targetInchesX, double targetInchesY, boolean XcoordFirst) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+    public static void PID_goto(double targetInchesX, double targetInchesY, boolean XcoordFirst) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
 
         int currentPosition = getMotorPosition(0);
         double targetPositionY = currentPosition + (targetInchesX * ticksPerInch);
@@ -213,26 +324,22 @@ public class Commons {
             error = targetPositionY - getMotorPosition(0);
         }
 
+//        Commons.lockMotors(75);
         Commons.stopMotors();
+
+        isBusy = false;
     }
 
 //    Robot Values Getters
     public static double getYawAngle() {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return 0;
-        }
+        if (initWarning()==1) {return 181;}
 
         return imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES);
-
-//        return Math.round(imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.DEGREES)/10)*10; // Rounds to one decimal place (1234.5678 -> x10 -> 12345.678 -> round -> 12345 -> x0.1 -> 1234.5)
     }
 
+    @Deprecated
     public static int getMotorPosition(int motor) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return 0;
-        }
+        if (initWarning()==1) {return 181;}
 
         switch (motor) {
             case 0:
@@ -257,24 +364,57 @@ public class Commons {
 //    Basic Robot Movement
 
     public static void moveForward(int inches, double speed) throws InterruptedException {
-        int targetPosition = (int)(inches * ticksPerInch) + getMotorPosition(0);
-        setMotorTargetPosition(targetPosition);
-        setMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-        startForward(speed);
+        if (initWarning()==1) {return;}
 
-        while (frontLeftMotor.isBusy() && opModeIsActive.getAsBoolean()) {
-            sleep(1);
+        isBusy = true;
+
+        int targetPosition = (int)(-inches * ticksPerInch) + frontRightMotor.getCurrentPosition();
+
+        if (frontRightMotor.getCurrentPosition() < targetPosition) {
+            while (frontRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
+                startForward(-speed);
+                telemetry.addData("current pos: ", Integer.toString(backRightMotor.getCurrentPosition()));
+                telemetry.update();
+            }
+        } else if (frontRightMotor.getCurrentPosition() > targetPosition) {
+            while (frontRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
+                startForward(speed);
+            }
         }
 
+        Commons.stopMotorsForward();
         stopMotors();
-        setMotorMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        isBusy = false;
+    }
+
+    public static void moveBackward(int inches, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        int targetPosition = (int)(inches * ticksPerInch) + frontRightMotor.getCurrentPosition();
+
+        if (frontRightMotor.getCurrentPosition() > targetPosition) {
+            while (frontRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
+                startBackward(-speed);
+                telemetry.addData("current pos: ", Integer.toString(backRightMotor.getCurrentPosition()));
+                telemetry.update();
+            }
+        } else if (frontRightMotor.getCurrentPosition() < targetPosition) {
+            while (frontRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
+                startBackward(speed);
+            }
+        }
+
+        Commons.stopMotorsBackward();
+        stopMotors();
+
+        isBusy = false;
     }
 
     public static void startForward(double speed) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setPower(speed);
         frontRightMotor.setPower(speed);
@@ -282,23 +422,35 @@ public class Commons {
         backRightMotor.setPower(speed);
     }
 
-    public static void startLeft(double speed) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+    public static void startBackward(double speed) {
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setPower(-speed);
+        frontRightMotor.setPower(-speed);
         backLeftMotor.setPower(-speed);
+        backRightMotor.setPower(-speed);
+    }
+
+    public static void startLateralLeft(double speed) {
+        if (initWarning()==1) {return;}
+
+        frontLeftMotor.setPower(-speed);
         frontRightMotor.setPower(speed);
+        backLeftMotor.setPower(speed);
+        backRightMotor.setPower(-speed);
+    }
+
+    public static void startLateralRight(double speed) {
+        if (initWarning()==1) {return;}
+
+        frontLeftMotor.setPower(speed);
+        frontRightMotor.setPower(-speed);
+        backLeftMotor.setPower(-speed);
         backRightMotor.setPower(speed);
     }
 
-    public static void startRight(double speed) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+    public static void startRotateRight(double speed) {
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setPower(speed);
         backLeftMotor.setPower(speed);
@@ -306,11 +458,47 @@ public class Commons {
         backRightMotor.setPower(-speed);
     }
 
-    public static void stopMotors() {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
+    public static void startRotateLeft(double speed) {
+        if (initWarning()==1) {return;}
+
+        frontLeftMotor.setPower(-speed);
+        backLeftMotor.setPower(-speed);
+        frontRightMotor.setPower(speed);
+        backRightMotor.setPower(speed);
+    }
+
+    public static void lateralLeft(double inches, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        int targetPosition = (int)(inches * ticksPerInch) + backRightMotor.getCurrentPosition();
+        while (backRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
+            startLateralLeft(speed);
         }
+        Commons.stopMotorsLateralLeft();
+        stopMotors();
+
+        isBusy = false;
+    }
+
+    public static void lateralRight(double inches, double speed) throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        isBusy = true;
+
+        int targetPosition = (int)(-inches * ticksPerInch) + backRightMotor.getCurrentPosition();
+        while (backRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
+            startLateralRight(speed);
+        }
+        Commons.stopMotorsLateralRight();
+        stopMotors();
+
+        isBusy = false;
+    }
+
+    public static void stopMotors() {
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setPower(0);
         backLeftMotor.setPower(0);
@@ -319,22 +507,15 @@ public class Commons {
     }
 
     public static void print(String value, String value1) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+        if (initWarning()==1) {return;}
 
         telemetry.addData(value, value1);
         telemetry.update();
-
-
     }
 
+    @Deprecated
     public static void setMotorMode(DcMotor.RunMode runMode) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setMode(runMode);
         frontRightMotor.setMode(runMode);
@@ -342,15 +523,61 @@ public class Commons {
         backRightMotor.setMode(runMode);
     }
 
+    @Deprecated
     public static void setMotorTargetPosition(int targetPosition) {
-        if (!initialized) {
-            System.err.println("Initialize commons first! - \"Commons.init();\"");
-            return;
-        }
+        if (initWarning()==1) {return;}
 
         frontLeftMotor.setTargetPosition(targetPosition);
         frontRightMotor.setTargetPosition(targetPosition);
         backLeftMotor.setTargetPosition(targetPosition);
         backRightMotor.setTargetPosition(targetPosition);
+    }
+
+    public static void stopMotorsForward() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startForward(-0.4);
+        sleep(75);
+        stopMotors();
+    }
+
+    public static void stopMotorsBackward() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startBackward(-0.4);
+        sleep(75);
+        stopMotors();
+    }
+
+    public static void stopMotorsRotateLeft() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startRotateLeft(-0.2);
+        sleep(75);
+        stopMotors();
+    }
+
+    public static void stopMotorsRotateRight() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startRotateRight(-0.2);
+        sleep(75);
+        stopMotors();
+    }
+
+    public static void stopMotorsLateralLeft() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startLateralLeft(-0.4);
+        sleep(75);
+        stopMotors();
+    }
+
+    public static void stopMotorsLateralRight() throws InterruptedException {
+        if (initWarning()==1) {return;}
+
+        startLateralRight(-0.4);
+        sleep(75);
+        stopMotors();
     }
 }
