@@ -101,7 +101,7 @@ public class Auton_HighBasket extends LinearOpMode {
 
         intakeServo.setPower(0);
 
-        viperSlideMotor.setPower(1);
+        viperSlideMotor.setPower(-1);
         while (viperSlideMotor.getCurrentPosition() < -125) {
             opModeIsActive();
             telemetry.addData("Viper Slide Position: ", Float.toString(viperSlideMotor.getCurrentPosition()));

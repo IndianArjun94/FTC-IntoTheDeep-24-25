@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.Commons;
 
-@Autonomous(name = "PID Testing (Turn)", group = "Test")
+@Autonomous(name = "PID Testing", group = "Test")
 public class PIDTesting extends LinearOpMode {
 
     @Override

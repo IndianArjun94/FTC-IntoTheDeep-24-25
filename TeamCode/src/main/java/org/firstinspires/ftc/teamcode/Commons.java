@@ -94,7 +94,7 @@ public class Commons {
         double D;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
-        double Ki = 0.005;
+        double Ki = 0.015;
         double Kd = -0.005;
 
         double maxI = 0.6;
@@ -151,7 +151,7 @@ public class Commons {
         double D;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
-        double Ki = 0.005;
+        double Ki = 0.015;
         double Kd = -0.005;
 
         double maxI = 0.6;
@@ -372,7 +372,7 @@ public class Commons {
 
         if (frontRightMotor.getCurrentPosition() < targetPosition) {
             while (frontRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
-                startForward(-speed);
+                startForward(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
                 telemetry.addData("current pos: ", Integer.toString(backRightMotor.getCurrentPosition()));
                 telemetry.update();
             }
@@ -397,7 +397,7 @@ public class Commons {
 
         if (frontRightMotor.getCurrentPosition() > targetPosition) {
             while (frontRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
-                startBackward(-speed);
+                startBackward(-speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
                 telemetry.addData("current pos: ", Integer.toString(backRightMotor.getCurrentPosition()));
                 telemetry.update();
             }
@@ -474,7 +474,7 @@ public class Commons {
 
         int targetPosition = (int)(inches * ticksPerInch) + backRightMotor.getCurrentPosition();
         while (backRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
-            startLateralLeft(speed);
+            startLateralLeft(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
         Commons.stopMotorsLateralLeft();
         stopMotors();
@@ -489,7 +489,7 @@ public class Commons {
 
         int targetPosition = (int)(-inches * ticksPerInch) + backRightMotor.getCurrentPosition();
         while (backRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
-            startLateralRight(speed);
+            startLateralRight(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
         Commons.stopMotorsLateralRight();
         stopMotors();

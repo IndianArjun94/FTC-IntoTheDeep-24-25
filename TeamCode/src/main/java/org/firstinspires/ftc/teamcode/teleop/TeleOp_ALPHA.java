@@ -52,6 +52,8 @@ public class TeleOp_ALPHA extends OpMode {
 
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.setMsTransmissionInterval(250);
     }
 
     @Override
@@ -108,6 +110,7 @@ public class TeleOp_ALPHA extends OpMode {
             }
         }
 
+
 //        Viper Slide
         if (gamepad2.right_trigger != 0) { // Extend
             viperSlideMotor.setPower(-gamepad2.right_trigger);
@@ -117,7 +120,9 @@ public class TeleOp_ALPHA extends OpMode {
             viperSlideMotor.setPower(0);
         }
 
-        print("Viper Slide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
+        telemetry.addData("Arm: ", Integer.toString(armMotor.getCurrentPosition()));
+        telemetry.addData("Viper Slide Position", Float.toString(viperSlideMotor.getCurrentPosition()));
+        telemetry.update();
 
 //        Intake Servo
         if (gamepad2.right_bumper) {
