@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static java.lang.Thread.sleep;
+
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -25,6 +27,7 @@ public class TeleOp_GOLDEN extends OpMode {
 
     public boolean armMotorUnlocked = false;
     public float armIdlePosition = 0;
+
 
     public void print(String value, String value1) {
         telemetry.addData(value, value1);
@@ -52,10 +55,25 @@ public class TeleOp_GOLDEN extends OpMode {
 
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        telemetry.setMsTransmissionInterval(180);
+
     }
 
     @Override
     public void loop() {
+
+        telemetry.addData("Viper Slide Position: ", viperSlideMotor.getCurrentPosition());
+        telemetry.addData("Arm Motor Position: ", armMotor.getCurrentPosition());
+        telemetry.addData("Front Left Motor Speed: ", frontLeftMotorSpeed);
+        telemetry.addData("Front Right Motor Speed:", frontRightMotorSpeed);
+        telemetry.addData("Back Left Motor Speed: ", backLeftMotorSpeed);
+        telemetry.addData("Back Right Motor Speed: ", backRightMotorSpeed);
+        telemetry.addData("Gamepad 1 Button: ", gamepad1);
+
+        telemetry.addLine();
+
+        telemetry.addData("Viper Slide Max: -2976", "");
 
 
         frontLeftMotorSpeed = 0;
@@ -89,6 +107,40 @@ public class TeleOp_GOLDEN extends OpMode {
             backLeftMotorSpeed += right_stick_x;
             frontRightMotorSpeed -= right_stick_x;
             backRightMotorSpeed -= right_stick_x;
+        }
+
+        //automatic hang
+        if (gamepad1.ps || gamepad2.ps) {
+            frontLeftMotor.setPower(0.5);
+            frontRightMotor.setPower(0.5);
+            backRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            armMotor.setPower(-0.75);
+
+            telemetry.addData("hanging", "");
+
+            //sleep for 1500 (try/catch)
+            try {
+                sleep(2000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+
+            armMotorUnlocked = false;
+            armIdlePosition = armMotor.getCurrentPosition();
+            armMotor.setTargetPosition((int)armIdlePosition);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armMotor.setPower(0.4);
+
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            intakeServo.setPower(0);
+
+            telemetry.addData("hanged","");
+
         }
 
 //        Robot Arm
@@ -127,6 +179,7 @@ public class TeleOp_GOLDEN extends OpMode {
         } else if (gamepad2.x) {
             intakeServo.setPower(0);
         }
+
 //       Stuck on bar
         if (gamepad1.dpad_down) {
             backLeftMotor.setPower(-1);
@@ -137,6 +190,29 @@ public class TeleOp_GOLDEN extends OpMode {
             }
         }
 
+//        Viper Limit
+        if (viperSlideMotor.getCurrentPosition() < -2976) {
+            viperSlideMotor.setPower(0);
+            while (viperSlideMotor.getCurrentPosition() < -2976) {
+                viperSlideMotor.setPower(0.5);
+            }
+        }
+//          Auto Hang
+        if (gamepad1.ps||gamepad2.ps) {
+            frontLeftMotor.setPower(1);
+            frontRightMotor.setPower(1);
+            backRightMotor.setPower(1);
+            backLeftMotor.setPower(1);
+            armMotor.setPower(-1);
+            if(gamepad1.b||gamepad2.b) {
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                armMotor.setPower(0);
+            }}
+
+        telemetry.update();
         update();
     }
 }
