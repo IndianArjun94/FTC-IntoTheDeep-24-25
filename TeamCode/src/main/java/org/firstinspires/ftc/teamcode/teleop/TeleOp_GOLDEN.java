@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.R;
+
 @com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp GOLDEN", group = "TeleOp")
 public class TeleOp_GOLDEN extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
@@ -164,11 +166,15 @@ public class TeleOp_GOLDEN extends OpMode {
 
 //        Viper Slide
         if (gamepad2.right_trigger != 0) { // Extend
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(-gamepad2.right_trigger);
         } else if (gamepad2.left_trigger != 0) { // Retract
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(gamepad2.left_trigger);
         } else {
-            viperSlideMotor.setPower(0);
+            viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
+            viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            viperSlideMotor.setPower(0.4);
         }
 
 //        Intake Servo
