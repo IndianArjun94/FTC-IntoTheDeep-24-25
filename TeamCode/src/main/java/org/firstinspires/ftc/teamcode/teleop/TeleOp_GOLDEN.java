@@ -182,7 +182,7 @@ public class TeleOp_GOLDEN extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad2.left_bumper) {
             intakeServo.setPower(-1);
-        } else if (gamepad2.x) {
+        } if (gamepad2.right_bumper && gamepad2.left_bumper) {
             intakeServo.setPower(0);
         }
 
