@@ -36,9 +36,9 @@ public class Auton_Sample extends LinearOpMode {
 //        Arm Up
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setPower(1);
-        armMotor.setTargetPosition(1980);
+        armMotor.setTargetPosition(2000);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() < 1980 && opModeIsActive()) {
+        while (armMotor.getCurrentPosition() < 2000 && opModeIsActive()) {
             sleep(5);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());

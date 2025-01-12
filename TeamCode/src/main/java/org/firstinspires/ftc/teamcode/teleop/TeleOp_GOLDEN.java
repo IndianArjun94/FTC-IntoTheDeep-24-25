@@ -5,7 +5,6 @@ import static java.lang.Thread.sleep;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 
@@ -22,10 +21,6 @@ public class TeleOp_GOLDEN extends OpMode {
     public DcMotor viperSlideMotor;
 
     public CRServo intakeServo;
-
-    public Servo clawArm;
-
-    public Servo claw;
 
     public float frontLeftMotorSpeed = 0;
     public float frontRightMotorSpeed = 0;
@@ -59,8 +54,6 @@ public class TeleOp_GOLDEN extends OpMode {
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
-        clawArm = hardwareMap.get(Servo.class, "clawArm");
-        claw = hardwareMap.get(Servo.class, "claw");
 
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -79,8 +72,6 @@ public class TeleOp_GOLDEN extends OpMode {
         telemetry.addData("Back Left Motor Speed: ", backLeftMotorSpeed);
         telemetry.addData("Back Right Motor Speed: ", backRightMotorSpeed);
         telemetry.addData("Gamepad 1 Button: ", gamepad1);
-        telemetry.addData("Claw Arm Position", clawArm.getPosition());
-        telemetry.addData("Claw Position", claw.getPosition());
 
         telemetry.addLine();
 
@@ -121,7 +112,7 @@ public class TeleOp_GOLDEN extends OpMode {
         }
 
         //automatic hang
-        if (gamepad1.ps && gamepad2.ps) {
+        if (gamepad1.ps || gamepad2.ps) {
             frontLeftMotor.setPower(0.5);
             frontRightMotor.setPower(0.5);
             backRightMotor.setPower(0.5);
@@ -191,7 +182,7 @@ public class TeleOp_GOLDEN extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad2.left_bumper) {
             intakeServo.setPower(-1);
-        } else if (gamepad2.back) {
+        } else if (gamepad2.x) {
             intakeServo.setPower(0);
         }
 
@@ -212,27 +203,21 @@ public class TeleOp_GOLDEN extends OpMode {
                 viperSlideMotor.setPower(0.5);
             }
         }
-//          Claw arm
-        while (gamepad2.y) {
-            clawArm.setPosition(clawArm.getPosition()+2);
-        }
-        while (gamepad2.a) {
-            clawArm.setPosition(clawArm.getPosition()-2);
-        }
-//          Claw
-        while (gamepad2.b) {
-            claw.setPosition(90);
-        }
-        while (gamepad2.x) {
-            claw.setPosition(0);
-        }
-//          Claw Arm Limit
-        if (clawArm.getPosition() >= 300) {
-            clawArm.setPosition(299);
-        }
-        if (clawArm.getPosition() <= 0 ){
-            clawArm.setPosition(1);
-        }
+//          Auto Hang
+        if (gamepad1.ps||gamepad2.ps) {
+            frontLeftMotor.setPower(1);
+            frontRightMotor.setPower(1);
+            backRightMotor.setPower(1);
+            backLeftMotor.setPower(1);
+            armMotor.setPower(-1);
+            if(gamepad1.b||gamepad2.b) {
+                frontLeftMotor.setPower(0);
+                frontRightMotor.setPower(0);
+                backRightMotor.setPower(0);
+                backLeftMotor.setPower(0);
+                armMotor.setPower(0);
+            }}
+
         telemetry.update();
         update();
     }

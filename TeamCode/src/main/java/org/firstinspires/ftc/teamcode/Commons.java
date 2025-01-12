@@ -13,6 +13,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.function.BooleanSupplier;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
+import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
+
+import java.util.Locale;
+
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
 public class Commons {
     public static final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public static float AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8f;
@@ -28,6 +39,8 @@ public class Commons {
     public static CRServo intakeServo;
 
     public static IMU imu;
+
+    public static GoBildaPinpointDriver odo;
 
     public static final double ticksPerInch = 41.8;
 
@@ -46,6 +59,9 @@ public class Commons {
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         armMotor = hardwareMap.get(DcMotor.class, "armRotationMotor");
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
+        viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
@@ -54,6 +70,12 @@ public class Commons {
                 new IMU.Parameters(new RevHubOrientationOnRobot(RevHubOrientationOnRobot.LogoFacingDirection.UP,
                         RevHubOrientationOnRobot.UsbFacingDirection.RIGHT))
         );
+
+//        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+//        odo.setOffsets(-84.0, -168.0);
+//        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+//        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+//        odo.resetPosAndIMU();
 
         initialized = true;
 
