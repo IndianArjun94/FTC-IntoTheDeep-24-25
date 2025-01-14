@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
+import static com.sun.tools.doclint.Entity.not;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -51,6 +52,7 @@ public class TeleOp_GOLDEN extends OpMode {
 
     @Override
     public void init() {
+
         frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
         frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
         backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
@@ -213,26 +215,72 @@ public class TeleOp_GOLDEN extends OpMode {
             }
         }
 //          Claw arm
-        while (gamepad2.y) {
-            clawArm.setPosition(clawArm.getPosition()+2);
+        if (gamepad2.y) {
+            clawArm.setPosition(0.88);
         }
-        while (gamepad2.a) {
-            clawArm.setPosition(clawArm.getPosition()-2);
+
+        if (gamepad2.a) {
+            clawArm.setPosition(0.3);
         }
 //          Claw
-        while (gamepad2.b) {
-            claw.setPosition(90);
+        if (gamepad2.b && !gamepad2.start) {
+            claw.setPosition(0.5);
         }
-        while (gamepad2.x) {
-            claw.setPosition(0);
+        if (gamepad2.x) {
+            claw.setPosition(0.3);
         }
-//          Claw Arm Limit
+
+//        Auto hang specimen
+        if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(-0.5);
+            backRightMotor.setPower(-0.5);
+            backLeftMotor.setPower(-0.5);
+            try {
+                sleep(50);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+            clawArm.setPosition(0.7);
+            try {
+                sleep(1000);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            frontLeftMotor.setPower(0.5);
+            frontRightMotor.setPower(0.5);
+            backRightMotor.setPower(0.5);
+            backLeftMotor.setPower(0.5);
+            try {
+                sleep(250);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            frontLeftMotor.setPower(-0.5);
+            frontRightMotor.setPower(-0.5);
+            backRightMotor.setPower(-0.5);
+            backLeftMotor.setPower(-0.5);
+            try {
+                sleep(250);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+            frontLeftMotor.setPower(0);
+            frontRightMotor.setPower(0);
+            backRightMotor.setPower(0);
+            backLeftMotor.setPower(0);
+        }
+/*         Claw Arm Limit
         if (clawArm.getPosition() >= 300) {
             clawArm.setPosition(299);
             }
         if (clawArm.getPosition() <= 0 ){
             clawArm.setPosition(1);
-            }
+           }*/
 
 
         telemetry.update();
