@@ -29,7 +29,7 @@ public class Auton_Sample extends LinearOpMode {
         waitForStart();
         moveForward(12, 1);
         PID_rotateLeft(90, 1);
-        moveForward(32, 1);
+        PID_forward(32, 1);
         PID_rotateLeft(45, 1);
         PID_forward(10, 0.8);
 
@@ -71,9 +71,9 @@ public class Auton_Sample extends LinearOpMode {
 
 //        Continue Movement
         PID_rotateRight(45, 1);
-        moveBackward(10, 0.8);
+        PID_backward(10, 0.8);
         sleep(250);
-        lateralRight(31, 1);
+        lateralRight(32, 1);
 
 //        Pick Up Sample
         viperSlideMotor.setTargetPosition(40);
@@ -82,7 +82,7 @@ public class Auton_Sample extends LinearOpMode {
         moveBackward(3, 0.35);
         intakeServo.setPower(0);
         lateralLeft(26, 1);
-        moveForward(8, 1);
+        PID_forward(8, 1);
         PID_rotateLeft(50, 1);
         PID_forward(7, 0.8);
 
