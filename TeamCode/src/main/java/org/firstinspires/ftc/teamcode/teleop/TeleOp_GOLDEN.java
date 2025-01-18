@@ -5,6 +5,7 @@ import static java.lang.Thread.sleep;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 
@@ -21,6 +22,9 @@ public class TeleOp_GOLDEN extends OpMode {
     public DcMotor viperSlideMotor;
 
     public CRServo intakeServo;
+
+    public DcMotor clawArm;
+    public Servo claw;
 
     public float frontLeftMotorSpeed = 0;
     public float frontRightMotorSpeed = 0;
@@ -55,6 +59,9 @@ public class TeleOp_GOLDEN extends OpMode {
 
         intakeServo = hardwareMap.get(CRServo.class, "intakeServo");
 
+        clawArm = hardwareMap.get(DcMotor.class, "clawArm");
+        claw = hardwareMap.get(Servo.class, "claw");
+
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
@@ -72,10 +79,12 @@ public class TeleOp_GOLDEN extends OpMode {
         telemetry.addData("Back Left Motor Speed: ", backLeftMotorSpeed);
         telemetry.addData("Back Right Motor Speed: ", backRightMotorSpeed);
         telemetry.addData("Gamepad 1 Button: ", gamepad1);
+        telemetry.addData("Claw Arm Position: ", clawArm.getCurrentPosition());
+        telemetry.addData("Claw Position: ", claw.getPosition());
 
         telemetry.addLine();
 
-        telemetry.addData("Viper Slide Max: -2976", "");
+        telemetry.addData("Viper Slide Max: -2470", "");
 
 
         frontLeftMotorSpeed = 0;
@@ -182,7 +191,7 @@ public class TeleOp_GOLDEN extends OpMode {
             intakeServo.setPower(1);
         } else if (gamepad2.left_bumper) {
             intakeServo.setPower(-1);
-        } if (gamepad2.right_bumper && gamepad2.left_bumper) {
+        } if (gamepad2.ps) {
             intakeServo.setPower(0);
         }
 
@@ -197,26 +206,30 @@ public class TeleOp_GOLDEN extends OpMode {
         }
 
 //        Viper Limit
-        if (viperSlideMotor.getCurrentPosition() < -2976) {
+        if (viperSlideMotor.getCurrentPosition() < -2470) {
             viperSlideMotor.setPower(0);
-            while (viperSlideMotor.getCurrentPosition() < -2976) {
+            while (viperSlideMotor.getCurrentPosition() < -2470) {
                 viperSlideMotor.setPower(0.5);
             }
         }
-//          Auto Hang
-        if (gamepad1.ps||gamepad2.ps) {
-            frontLeftMotor.setPower(1);
-            frontRightMotor.setPower(1);
-            backRightMotor.setPower(1);
-            backLeftMotor.setPower(1);
-            armMotor.setPower(-1);
-            if(gamepad1.b||gamepad2.b) {
-                frontLeftMotor.setPower(0);
-                frontRightMotor.setPower(0);
-                backRightMotor.setPower(0);
-                backLeftMotor.setPower(0);
-                armMotor.setPower(0);
-            }}
+
+//        Claw Arm
+        if (gamepad2.y) {
+            clawArm.setPower(-0.5);
+            clawArm.setTargetPosition(-760);
+            clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        } else if (gamepad2.a) {
+            clawArm.setPower(0.5);
+            clawArm.setTargetPosition(0);
+            clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+//        Claw
+        if (gamepad2.b && !gamepad2.start) {
+            claw.setPosition(0.5);
+        } else if (gamepad2.x) {
+            claw.setPosition(0.3);
+        }
 
         telemetry.update();
         update();
