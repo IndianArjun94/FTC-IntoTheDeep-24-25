@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 
-@com.qualcomm.robotcore.eventloop.opmode.TeleOp(name = "TeleOp GOLDEN", group = "TeleOp")
 public class TeleOp_GOLDEN extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
