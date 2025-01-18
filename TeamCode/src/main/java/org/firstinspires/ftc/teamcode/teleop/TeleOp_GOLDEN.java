@@ -3,12 +3,14 @@ package org.firstinspires.ftc.teamcode.teleop;
 import static java.lang.Thread.sleep;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.R;
 
+@TeleOp(name = "TeleOp GOLDEN")
 public class TeleOp_GOLDEN extends OpMode {
     public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public final float ARMROT_SPEED_CAP = 0.7F;
@@ -120,7 +122,7 @@ public class TeleOp_GOLDEN extends OpMode {
         }
 
         //automatic hang
-        if (gamepad1.ps || gamepad2.ps) {
+        if (gamepad1.back && gamepad2.back) {
             frontLeftMotor.setPower(0.5);
             frontRightMotor.setPower(0.5);
             backRightMotor.setPower(0.5);
@@ -215,7 +217,7 @@ public class TeleOp_GOLDEN extends OpMode {
 //        Claw Arm
         if (gamepad2.y) {
             clawArm.setPower(-0.5);
-            clawArm.setTargetPosition(-760);
+            clawArm.setTargetPosition(-740);
             clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         } else if (gamepad2.a) {
             clawArm.setPower(0.5);
