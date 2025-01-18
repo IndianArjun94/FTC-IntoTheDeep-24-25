@@ -1,8 +1,16 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.Commons.PID_rotateRight;
 import static org.firstinspires.ftc.teamcode.Commons.armMotor;
+import static org.firstinspires.ftc.teamcode.Commons.backLeftMotor;
+import static org.firstinspires.ftc.teamcode.Commons.backRightMotor;
+import static org.firstinspires.ftc.teamcode.Commons.claw;
+import static org.firstinspires.ftc.teamcode.Commons.clawArm;
+import static org.firstinspires.ftc.teamcode.Commons.frontLeftMotor;
+import static org.firstinspires.ftc.teamcode.Commons.frontRightMotor;
 import static org.firstinspires.ftc.teamcode.Commons.intakeServo;
 import static org.firstinspires.ftc.teamcode.Commons.lateralLeft;
+import static org.firstinspires.ftc.teamcode.Commons.lateralRight;
 import static org.firstinspires.ftc.teamcode.Commons.moveBackward;
 import static org.firstinspires.ftc.teamcode.Commons.moveForward;
 import static org.firstinspires.ftc.teamcode.Commons.viperSlideMotor;
@@ -43,150 +51,123 @@ public class Auton_Specimen extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        Commons.moveForward(3,0.9);
+        moveForward(2,0.7);
 
-        armMotor.setPower(0.8);
-        armMotor.setTargetPosition(1700);
+        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        armMotor.setPower(1);
+        armMotor.setTargetPosition(325);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() < 1700 && opModeIsActive()) {
-            sleep(2);
+        while (armMotor.getCurrentPosition() < 325 && opModeIsActive()) {
+            sleep(5);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
-
-        //-600 old position viper slide
-        viperSlideMotor.setPower(-0.5);
-        viperSlideMotor.setTargetPosition(-510);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition() > -510 && opModeIsActive()) {
-            sleep(3);
-        }
-        viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
-
-        Commons.moveForward(23, 0.8);
-
-        armMotor.setPower(-0.3);
-        intakeServo.setPower(0.3);
-        armMotor.setTargetPosition(1300);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 1300 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
-
-        moveBackward(2, 0.5*1.25);
-
-        viperSlideMotor.setPower(0.5);
-        viperSlideMotor.setTargetPosition(0);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition() > 0 && opModeIsActive()) {
-            sleep(3);
-            telemetry.addData("Position", viperSlideMotor.getCurrentPosition());
-            telemetry.addData("Mode", viperSlideMotor.getMode());
-            telemetry.update();
-        }
-        viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
+        armMotor.setPower(0.4);
 
 
-        moveBackward(2, 0.5*1.25);
 
-        intakeServo.setPower(1);
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
 
-        Commons.PID_rotateRight(96, 0.6*1.25);
-        intakeServo.setPower(0);
+        sleep(1500);
 
-        moveForward(43,0.65*1.25);
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+
+        clawArm.setPower(-0.5);
+        clawArm.setTargetPosition(-740);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sleep(1000);
+
+        clawArm.setPower(0.5);
+        clawArm.setTargetPosition(0);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        moveBackward(5, 1.25*0.9);
+
+        PID_rotateRight(90,0.5*1.25);
 
 
-        Commons.PID_rotateRight(94, 0.6*1.25);
+        moveForward(34,0.7*1.25);
 
-        intakeServo.setPower(0);
-        armMotor.setPower(-0.8);
-        armMotor.setTargetPosition(50);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 50 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        lateralLeft(29,0.5*1.25);
 
-        intakeServo.setPower(-1);
+        moveForward(9,0.7*1.25);
 
-        sleep(2000);
+        lateralRight(45,0.5*1.25);
 
-        moveForward(24,0.2*1.25);
+        lateralLeft(10,0.5*1.25);
 
-        armMotor.setPower(-0.8);
-        armMotor.setTargetPosition(5);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 5 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        PID_rotateRight(90,0.7*1.25);
 
-        moveBackward(3,0.7*1.25);
+        lateralLeft(5,0.5*1.25);
 
-        intakeServo.setPower(0);
+        sleep(500);
 
-        Commons.PID_rotateRight(84,0.7*1.25);
 
-        armMotor.setPower(0.5);
-        armMotor.setTargetPosition(1000);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() <  1000 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        claw.setPosition(0.3);
 
-        Commons.PID_rotateRight(90,0.7*1.25);
+        sleep(200);
 
-        lateralLeft(63,0.6*1.25);
+        clawArm.setPower(-0.5);
+        clawArm.setTargetPosition(-760);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        sleep(1000);
 
-        armMotor.setPower(0.8);
-        armMotor.setTargetPosition(1800);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() < 1800 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        moveForward(14,0.5);
 
-        //-600 old position viper slide
-        viperSlideMotor.setPower(-0.5);
-        viperSlideMotor.setTargetPosition(-500);
-        viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition() > -500 && opModeIsActive()) {
-            sleep(3);
-        }
-        viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
+        sleep(500);
 
-        moveForward(25,0.3*1.25);
+        claw.setPosition(0.5);
 
-        moveBackward(3,0.7*1.25);
+        sleep(200);
 
-        armMotor.setPower(-0.6);
-        armMotor.setTargetPosition(1200);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 1200 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        clawArm.setPower(0.5);
+        clawArm.setTargetPosition(0);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        moveBackward(13,0.8*1.25);
-        intakeServo.setPower(0);
+        sleep(1000);
 
-        Commons.lateralRight(40,0.5*1.25);
+        moveBackward(10,0.3);
 
-        Commons.PID_rotateRight(90,0.6);
+        PID_rotateRight(85,0.5*1.25);
+        PID_rotateRight(90,0.5*1.25);
 
-        Commons.PID_rotateRight(20,0.5*1.25);
+        lateralLeft(67,0.5*1.25);
 
-        moveForward(12,0.5);
+        frontLeftMotor.setPower(0.5);
+        frontRightMotor.setPower(0.5);
+        backRightMotor.setPower(0.5);
+        backLeftMotor.setPower(0.5);
 
-        armMotor.setPower(-0.6);
-        armMotor.setTargetPosition(0);
-        armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 1200 && opModeIsActive()) {
-            sleep(2);
-        }
-        armMotor.setTargetPosition(armMotor.getCurrentPosition());
+        sleep(1000);
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
+
+        clawArm.setPower(-0.5);
+        clawArm.setTargetPosition(-740);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sleep(1000);
+
+        clawArm.setPower(0.5);
+        clawArm.setTargetPosition(0);
+        clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sleep(1000);
+
+        moveBackward(5,0.5*1.25);
+
+//        clawArm.setPosition(0.4);
+
+
 
 /*
         lateralLeft(30,0.5);
