@@ -38,6 +38,10 @@ public class Commons {
 
     public static CRServo intakeServo;
 
+    public  static Servo claw;
+
+    public static DcMotor clawArm;
+
     public static IMU imu;
 
     public static GoBildaPinpointDriver odo;
@@ -59,6 +63,9 @@ public class Commons {
         backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
         armMotor = hardwareMap.get(DcMotor.class, "armRotationMotor");
         viperSlideMotor = hardwareMap.get(DcMotor.class, "viperSlide");
+        clawArm = hardwareMap.get(DcMotor.class, "clawArm");
+        claw = hardwareMap.get(Servo.class, "claw");
+
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
