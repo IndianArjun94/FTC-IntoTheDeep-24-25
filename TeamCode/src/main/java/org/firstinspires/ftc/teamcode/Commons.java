@@ -13,21 +13,17 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.function.BooleanSupplier;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
 
-import java.util.Locale;
-
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
 public class Commons {
     public static final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public static float AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8f;
     public static final float ARMROT_SPEED_CAP = 0.7F;
+
+    public static final double TPI_ODO = 505.325937f;
+    public static final double TPI_MOTOR = 41.8f;
 
     public static DcMotor frontLeftMotor;
     public static DcMotor frontRightMotor;
@@ -46,7 +42,6 @@ public class Commons {
 
     public static GoBildaPinpointDriver odo;
 
-    public static final double ticksPerInch = 41.8;
 
     public static boolean initialized = false;
 
@@ -78,11 +73,11 @@ public class Commons {
                         RevHubOrientationOnRobot.UsbFacingDirection.RIGHT))
         );
 
-//        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
-//        odo.setOffsets(-84.0, -168.0);
-//        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-//        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
-//        odo.resetPosAndIMU();
+        odo = hardwareMap.get(GoBildaPinpointDriver.class, "odo");
+        odo.setOffsets(-84.0, -168.0);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
 
         initialized = true;
 
@@ -213,13 +208,20 @@ public class Commons {
         isBusy = false;
     }
 
+    /**Moves forward precisely using PID and odometry.<br><br>
+     @param targetInches The number of inches to move forward relative to the robot position<br>
+     @param speed The maximum speed the robot at go to reach the target position. This value is
+     multiplied by 0.8. To counter this, multiply speed by 1.25 for more accurate speed. The speed
+     will scale from the provided maximum to I+((error/originalError)*(timesLooped-1)), I being
+     the integral value in PID at the very end*/
     public static void PID_forward(int targetInches, double speed) throws InterruptedException {
         if (initWarning()==1) {return;}
 
         isBusy = true;
 
-        int currentPosition = frontRightMotor.getCurrentPosition();
-        double targetPosition = currentPosition - (targetInches * ticksPerInch);
+//        int currentPosition = frontRightMotor.getCurrentPosition();
+        double currentPosition = getPositionX();
+        double targetPosition = currentPosition - (targetInches * TPI_ODO);
 
         double error = targetPosition - currentPosition;
         double originalError = targetPosition - currentPosition;
@@ -235,7 +237,7 @@ public class Commons {
         double maxI = 0.5f;
 
 
-        while ((error <= -ticksPerInch || error >= ticksPerInch) && opModeIsActive.getAsBoolean()) {
+        while ((error <= -TPI_ODO || error >= TPI_ODO) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
 //            Checks
             if (Math.abs(I) > maxI) {
                 I = maxI - error/originalError * Ki;
@@ -247,7 +249,7 @@ public class Commons {
 //            Powering Motors
             Commons.startForward((P+I+D)*speed);
 //            Updating Variables
-            error = targetPosition - frontRightMotor.getCurrentPosition();
+            error = targetPosition - getPositionX();
         }
 
 
@@ -257,13 +259,20 @@ public class Commons {
         isBusy = false;
     }
 
+    /**Moves backward precisely using PID and odometry.<br><br>
+     @param targetInches The number of inches to move backward relative to the robot position<br>
+     @param speed The maximum speed the robot at go to reach the target position. This value is
+     multiplied by 0.8. To counter this, multiply speed by 1.25 for more accurate speed. The speed
+     will scale from the provided maximum to I+((error/originalError)*(timesLooped-1)), I being
+     the integral value in PID at the very end*/
     public static void PID_backward(int targetInches, double speed) throws InterruptedException {
         if (initWarning()==1) {return;}
 
         isBusy = true;
 
-        int currentPosition = frontRightMotor.getCurrentPosition();
-        double targetPosition = currentPosition - (-targetInches * ticksPerInch);
+//        int currentPosition = frontRightMotor.getCurrentPosition();
+        double currentPosition = getPositionX();
+        double targetPosition = currentPosition - (-targetInches * TPI_ODO);
 
         double error = targetPosition - currentPosition;
         double originalError = targetPosition - currentPosition;
@@ -278,7 +287,7 @@ public class Commons {
 
         double maxI = 0.5f;
 
-        while ((error <= -ticksPerInch || error >= ticksPerInch) && opModeIsActive.getAsBoolean()) {
+        while ((error <= -TPI_ODO || error >= TPI_ODO) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
 //            Checks
             if (Math.abs(I) > maxI) {
                 I = maxI - error/originalError * Ki;
@@ -290,7 +299,7 @@ public class Commons {
 //            Powering Motors
             Commons.startBackward((P+I+D)*speed);
 //            Updating Variables
-            error = targetPosition - frontRightMotor.getCurrentPosition();
+            error = targetPosition - getPositionX();
         }
 
 
@@ -307,7 +316,7 @@ public class Commons {
         isBusy = true;
 
         int currentPosition = getMotorPosition(0);
-        double targetPositionY = currentPosition + (targetInchesX * ticksPerInch);
+        double targetPositionY = currentPosition + (targetInchesX * TPI_MOTOR);
 
         double error = targetPositionY - currentPosition;
         double originalError = targetPositionY - currentPosition;
@@ -397,7 +406,7 @@ public class Commons {
 
         isBusy = true;
 
-        int targetPosition = (int)(-inches * ticksPerInch) + frontRightMotor.getCurrentPosition();
+        int targetPosition = (int)(-inches * TPI_MOTOR) + frontRightMotor.getCurrentPosition();
 
         if (frontRightMotor.getCurrentPosition() < targetPosition) {
             while (frontRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
@@ -422,7 +431,7 @@ public class Commons {
 
         isBusy = true;
 
-        int targetPosition = (int)(inches * ticksPerInch) + frontRightMotor.getCurrentPosition();
+        int targetPosition = (int)(inches * TPI_MOTOR) + frontRightMotor.getCurrentPosition();
 
         if (frontRightMotor.getCurrentPosition() > targetPosition) {
             while (frontRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
@@ -501,7 +510,7 @@ public class Commons {
 
         isBusy = true;
 
-        int targetPosition = (int)(inches * ticksPerInch) + backRightMotor.getCurrentPosition();
+        int targetPosition = (int)(inches * TPI_MOTOR) + backRightMotor.getCurrentPosition();
         while (backRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
             startLateralLeft(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
@@ -516,7 +525,7 @@ public class Commons {
 
         isBusy = true;
 
-        int targetPosition = (int)(-inches * ticksPerInch) + backRightMotor.getCurrentPosition();
+        int targetPosition = (int)(-inches * TPI_MOTOR) + backRightMotor.getCurrentPosition();
         while (backRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
             startLateralRight(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
@@ -608,5 +617,13 @@ public class Commons {
         startLateralRight(-0.4);
         sleep(75);
         stopMotors();
+    }
+
+    public static double getPositionX() {
+        return odo.getEncoderX();
+    }
+
+    public static double getPositionY() {
+        return odo.getEncoderY();
     }
 }
