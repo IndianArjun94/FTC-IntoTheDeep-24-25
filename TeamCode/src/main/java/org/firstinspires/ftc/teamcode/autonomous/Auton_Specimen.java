@@ -1,12 +1,8 @@
-package org.firstinspires.ftc.teamcode.autonomous.testing;
+package org.firstinspires.ftc.teamcode.autonomous;
 
-import static org.firstinspires.ftc.teamcode.Commons.PID_backward;
-import static org.firstinspires.ftc.teamcode.Commons.PID_rotateRight;
 import static org.firstinspires.ftc.teamcode.Commons.armMotor;
-import static org.firstinspires.ftc.teamcode.Commons.frontRightMotor;
 import static org.firstinspires.ftc.teamcode.Commons.intakeServo;
 import static org.firstinspires.ftc.teamcode.Commons.lateralLeft;
-import static org.firstinspires.ftc.teamcode.Commons.lateralRight;
 import static org.firstinspires.ftc.teamcode.Commons.moveBackward;
 import static org.firstinspires.ftc.teamcode.Commons.moveForward;
 import static org.firstinspires.ftc.teamcode.Commons.viperSlideMotor;
@@ -14,9 +10,7 @@ import static org.firstinspires.ftc.teamcode.Commons.viperSlideMotor;
 import static java.lang.String.valueOf;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Commons;
@@ -61,9 +55,9 @@ public class Auton_Specimen extends LinearOpMode {
 
         //-600 old position viper slide
         viperSlideMotor.setPower(-0.5);
-        viperSlideMotor.setTargetPosition(-520);
+        viperSlideMotor.setTargetPosition(-510);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition() > -520 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition() > -510 && opModeIsActive()) {
             sleep(3);
         }
         viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
@@ -71,13 +65,15 @@ public class Auton_Specimen extends LinearOpMode {
         Commons.moveForward(23, 0.8);
 
         armMotor.setPower(-0.3);
-        intakeServo.setPower(-0.3);
-        armMotor.setTargetPosition(1000);
+        intakeServo.setPower(0.3);
+        armMotor.setTargetPosition(1300);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 1000 && opModeIsActive()) {
+        while (armMotor.getCurrentPosition() > 1300 && opModeIsActive()) {
             sleep(2);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
+
+        moveBackward(2, 0.5*1.25);
 
         viperSlideMotor.setPower(0.5);
         viperSlideMotor.setTargetPosition(0);
@@ -91,7 +87,7 @@ public class Auton_Specimen extends LinearOpMode {
         viperSlideMotor.setTargetPosition(viperSlideMotor.getCurrentPosition());
 
 
-        moveBackward(4, 0.5*1.25);
+        moveBackward(2, 0.5*1.25);
 
         intakeServo.setPower(1);
 
@@ -105,9 +101,9 @@ public class Auton_Specimen extends LinearOpMode {
 
         intakeServo.setPower(0);
         armMotor.setPower(-0.8);
-        armMotor.setTargetPosition(240);
+        armMotor.setTargetPosition(50);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() > 240 && opModeIsActive()) {
+        while (armMotor.getCurrentPosition() > 50 && opModeIsActive()) {
             sleep(2);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
