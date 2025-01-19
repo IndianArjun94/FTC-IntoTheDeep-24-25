@@ -337,8 +337,7 @@ public class Commons {
         isBusy = false;
     }
 
-    @Deprecated
-    public static void PID_goto(double targetInchesX, double targetInchesY, boolean XcoordFirst) throws InterruptedException {
+    public static void PID_goto(double targetInchesX, double targetInchesY, boolean forwardFirst, double speed) throws InterruptedException {
         if (initWarning()==1) {return;}
 
         isBusy = true;
@@ -357,45 +356,55 @@ public class Commons {
         double originalErrorX = targetPositionY - currentPositionX;
         double originalErrorY = targetPositionY - currentPositionY;
 
-        double Px;
+        double Px; // Forward PID Controller
         double Ix = 0;
         double Dx;
+
+        double Py; // Sideways PID Controller
+        double Iy = 0;
+        double Dy;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
         double Ki = 0.001f;
         double Kd = 0.08f;
 
-        double Py;
-        double Iy = 0;
-        double Dy;
-
         double maxI = 0.3f;
 
-        while ((error != 0) && opModeIsActive.getAsBoolean()) {
+        while (((errorX <= -1 || errorX >= 1)||(errorY <= -1 || errorY >= 1)) && opModeIsActive.getAsBoolean()) {
 //            Checks
             if (Math.abs(Ix) > maxI) {
                 Ix = maxI;
             }
-//            PID Calculations
-            Px = 1-error/originalError * Kp;
-            Ix += 1-error/originalError * Ki;
-            Dx = 1-error/originalError * Kd;
+//            PID Calculations for X (forward/backward)
+            Px = errorX/originalErrorX * Kp;
+            Ix += errorX/originalErrorX * Ki;
+            Dx = errorX/originalErrorX * Kd;
 
-            Py = error/originalError * Kp;
-            Iy += error/originalError * Ki;
-            Dy = error/originalError * Kd;
+//            PID Calculations for Y (right/left)
+            Py = errorY/originalErrorY * Kp;
+            Iy += errorY/originalErrorY * Ki;
+            Dy = errorY/originalErrorY * Kd;
 
 //            Powering Motors
-            double PIDy = Py+Iy+Dy;
-            double PIDx = Px+Ix+Dx;
+            double PIDx;
+            double PIDy;
 
-            frontLeftMotor.setPower(PIDy + PIDx);
-            frontRightMotor.setPower(PIDy - PIDx);
-            backLeftMotor.setPower(PIDy + PIDx);
-            backRightMotor.setPower(PIDy - PIDx);
+            if (forwardFirst) {
+                PIDx = (Px+Ix+Dx)*speed;
+                PIDy = ((1-Py)+Iy+(1-Dy))*speed;
+            } else {
+                PIDx = ((1-Px)+Ix+(1-Dx))*speed;
+                PIDy = (Py+Iy+Dy)*speed;
+            }
+
+            frontLeftMotor.setPower(PIDx + PIDy);
+            frontRightMotor.setPower(PIDx - PIDy);
+            backLeftMotor.setPower(PIDx - PIDy);
+            backRightMotor.setPower(PIDx + PIDY);
 
 //            Updating Variables
-            error = targetPositionY - getMotorPosition(0);
+            errorX = targetInchesX - odo.getPosition().getX(DistanceUnit.INCH);
+            errorY = targetPositionY - odo.getPosition().getY(DistanceUnit.INCH);
         }
 
 //        Commons.lockMotors(75);
