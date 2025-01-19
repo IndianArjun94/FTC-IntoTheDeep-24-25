@@ -47,9 +47,9 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2470);
+        viperSlideMotor.setTargetPosition(-2340);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2470 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>-2340 && opModeIsActive()) {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
@@ -99,9 +99,9 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2470);
+        viperSlideMotor.setTargetPosition(-2340);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2470 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>-2340 && opModeIsActive()) {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
@@ -151,9 +151,9 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2470);
+        viperSlideMotor.setTargetPosition(-2340);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2470 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>-2340 && opModeIsActive()) {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }

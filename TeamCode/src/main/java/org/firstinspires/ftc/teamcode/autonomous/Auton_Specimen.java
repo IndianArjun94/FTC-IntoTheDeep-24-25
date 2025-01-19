@@ -118,13 +118,13 @@ public class Auton_Specimen extends LinearOpMode {
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 
-        moveForward(14,0.5);
+        moveForward(14,0.3);
 
         sleep(500);
 
         claw.setPosition(0.5);
 
-        sleep(200);
+        sleep(500);
 
         clawArm.setPower(0.5);
         clawArm.setTargetPosition(0);
@@ -163,7 +163,7 @@ public class Auton_Specimen extends LinearOpMode {
 
         sleep(1000);
 
-        moveBackward(15,0.5*1.25);
+        moveBackward(20,0.35*1.25);
 
         lateralRight(60,0.5*1.25);
 

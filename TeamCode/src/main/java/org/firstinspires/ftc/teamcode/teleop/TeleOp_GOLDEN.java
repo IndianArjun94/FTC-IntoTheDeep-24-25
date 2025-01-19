@@ -207,9 +207,9 @@ public class TeleOp_GOLDEN extends OpMode {
         }
 
 //        Viper Limit
-        if (viperSlideMotor.getCurrentPosition() < -2470) {
+        if (viperSlideMotor.getCurrentPosition() < -2071) {
             viperSlideMotor.setPower(0);
-            while (viperSlideMotor.getCurrentPosition() < -2470) {
+            while (viperSlideMotor.getCurrentPosition() < -2071) {
                 viperSlideMotor.setPower(0.5);
             }
         }
