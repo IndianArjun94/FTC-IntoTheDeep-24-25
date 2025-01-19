@@ -18,7 +18,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
 
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
+import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 
+@I2cDeviceType
+@DeviceProperties(
+        name = "goBILDA® Pinpoint Odometry Computer",
+        xmlTag = "goBILDAPinpoint",
+        description ="goBILDA® Pinpoint Odometry Computer (IMU Sensor Fusion for 2 Wheel Odometry)"
+)
 public class Commons {
     public static final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.5F;
     public static float AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8f;
