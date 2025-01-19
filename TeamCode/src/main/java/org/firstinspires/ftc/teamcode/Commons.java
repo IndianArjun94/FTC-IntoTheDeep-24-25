@@ -13,6 +13,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.function.BooleanSupplier;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
 
 import com.qualcomm.robotcore.hardware.Servo;
@@ -79,11 +81,12 @@ public class Commons {
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
 
+        Commons.opModeIsActive = opModeIsActive;
+        Commons.telemetry = telemetry;
+
         initialized = true;
 
-        Commons.opModeIsActive = opModeIsActive;
 
-        Commons.telemetry = telemetry;
     }
 
     public static int initWarning() {
@@ -219,9 +222,13 @@ public class Commons {
 
         isBusy = true;
 
+        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), 0, AngleUnit.RADIANS, 0));
+
 //        int currentPosition = frontRightMotor.getCurrentPosition();
-        double currentPosition = getPositionX();
-        double targetPosition = currentPosition - (targetInches * TPI_ODO);
+        double currentPosition = odo.getPosition().getX(DistanceUnit.INCH);
+        double targetPosition = currentPosition - (targetInches);
+
+        double errorY = odo.getPosition().getY(DistanceUnit.INCH);
 
         double error = targetPosition - currentPosition;
         double originalError = targetPosition - currentPosition;
@@ -230,26 +237,37 @@ public class Commons {
         double I = 0.1;
         double D;
 
+        double eP;
+
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
         double Ki = 0.02f;
         double Kd = 0.08f;
 
+        double eKp = 0.3;
+
         double maxI = 0.5f;
 
 
-        while ((error <= -TPI_ODO || error >= TPI_ODO) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
+        while ((error <= -1 || error >= 1) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
 //            Checks
             if (Math.abs(I) > maxI) {
                 I = maxI - error/originalError * Ki;
             }
 //            PID Calculations
-            P = error/originalError * Kp;
+            P = error/originalError * Kp; // Distance from target / original distance from target
             I += error/originalError * Ki;
             D = error/originalError * Kd;
-//            Powering Motors
-            Commons.startForward((P+I+D)*speed);
+            eP = errorY * eKp; // How far to left or right from target line
+//            Powering Motors (Forward & Y Error)
+            double PID = (P+I+D)*speed;
+            double FeP = (eP)*speed;
+            frontLeftMotor.setPower(PID - FeP);
+            frontRightMotor.setPower(PID + FeP);
+            backLeftMotor.setPower(PID + FeP);
+            backRightMotor.setPower(PID - FeP);
 //            Updating Variables
-            error = targetPosition - getPositionX();
+            error = targetPosition - odo.getPosition().getX(DistanceUnit.INCH);
+            errorY = odo.getPosition().getY(DistanceUnit.INCH);
         }
 
 
@@ -270,9 +288,13 @@ public class Commons {
 
         isBusy = true;
 
+        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), 0, AngleUnit.RADIANS, 0));
+
 //        int currentPosition = frontRightMotor.getCurrentPosition();
-        double currentPosition = getPositionX();
-        double targetPosition = currentPosition - (-targetInches * TPI_ODO);
+        double currentPosition = odo.getPosition().getX(DistanceUnit.INCH);
+        double targetPosition = currentPosition - (-targetInches);
+
+        double errorY = odo.getPosition().getY(DistanceUnit.INCH);
 
         double error = targetPosition - currentPosition;
         double originalError = targetPosition - currentPosition;
@@ -281,25 +303,31 @@ public class Commons {
         double I = 0.1;
         double D;
 
+        double eP;
+
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
         double Ki = 0.02f;
         double Kd = 0.08f;
 
+        double eKp = 0.3;
+
         double maxI = 0.5f;
 
-        while ((error <= -TPI_ODO || error >= TPI_ODO) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
+        while ((error <= -1 || error >= 1) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
 //            Checks
             if (Math.abs(I) > maxI) {
                 I = maxI - error/originalError * Ki;
             }
 //            PID Calculations
-            P = error/originalError * Kp;
+            P = error/originalError * Kp; // Distance from target / original distance from target
             I += error/originalError * Ki;
             D = error/originalError * Kd;
+            eP = errorY * eKp; // How far to left or right from target line
 //            Powering Motors
             Commons.startBackward((P+I+D)*speed);
 //            Updating Variables
-            error = targetPosition - getPositionX();
+            error = targetPosition - odo.getPosition().getX(DistanceUnit.INCH);
+            errorY = odo.getPosition().getY(DistanceUnit.INCH);
         }
 
 
@@ -315,11 +343,19 @@ public class Commons {
 
         isBusy = true;
 
-        int currentPosition = getMotorPosition(0);
-        double targetPositionY = currentPosition + (targetInchesX * TPI_MOTOR);
+        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.INCH), AngleUnit.RADIANS, 0));
 
-        double error = targetPositionY - currentPosition;
-        double originalError = targetPositionY - currentPosition;
+        double currentPositionX = odo.getPosition().getX(DistanceUnit.INCH);
+        double targetPositionX = currentPositionX + (targetInchesX);
+
+        double currentPositionY = odo.getPosition().getY(DistanceUnit.INCH);
+        double targetPositionY = currentPositionY + (targetInchesY);
+
+        double errorX = targetPositionX - currentPositionX;
+        double errorY = targetPositionY - currentPositionY;
+
+        double originalErrorX = targetPositionY - currentPositionX;
+        double originalErrorY = targetPositionY - currentPositionY;
 
         double Px;
         double Ix = 0;
@@ -400,7 +436,7 @@ public class Commons {
     }
 
 //    Basic Robot Movement
-
+    @Deprecated
     public static void moveForward(int inches, double speed) throws InterruptedException {
         if (initWarning()==1) {return;}
 
@@ -426,6 +462,7 @@ public class Commons {
         isBusy = false;
     }
 
+    @Deprecated
     public static void moveBackward(int inches, double speed) throws InterruptedException {
         if (initWarning()==1) {return;}
 
