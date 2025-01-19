@@ -78,10 +78,14 @@ public class Auton_Specimen extends LinearOpMode {
         backLeftMotor.setPower(0);
 
         clawArm.setPower(-0.5);
-        clawArm.setTargetPosition(-740);
+        clawArm.setTargetPosition(-600);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sleep(1000);
+
+        claw.setPosition(0.3);
+
+        sleep(500);
 
         clawArm.setPower(0.5);
         clawArm.setTargetPosition(0);
@@ -94,11 +98,11 @@ public class Auton_Specimen extends LinearOpMode {
 
         moveForward(34,0.7*1.25);
 
-        lateralLeft(29,0.5*1.25);
+        lateralLeft(35,0.5*1.25);
 
-        moveForward(9,0.7*1.25);
+        moveForward(10,0.7*1.25);
 
-        lateralRight(45,0.5*1.25);
+        lateralRight(51,0.5*1.25);
 
         lateralLeft(10,0.5*1.25);
 
@@ -109,16 +113,15 @@ public class Auton_Specimen extends LinearOpMode {
         sleep(500);
 
 
-        claw.setPosition(0.3);
 
         sleep(200);
 
         clawArm.setPower(-0.5);
-        clawArm.setTargetPosition(-740);
+        clawArm.setTargetPosition(-800);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 
-        moveForward(14,0.3);
+        moveForward(10,0.2);
 
         sleep(500);
 
@@ -137,7 +140,7 @@ public class Auton_Specimen extends LinearOpMode {
         PID_rotateRight(85,0.5*1.25);
         PID_rotateRight(90,0.5*1.25);
 
-        lateralLeft(67,0.5*1.25);
+        lateralLeft(68,0.5*1.25);
 
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
@@ -163,7 +166,7 @@ public class Auton_Specimen extends LinearOpMode {
 
         sleep(1000);
 
-        moveBackward(20,0.35*1.25);
+        moveBackward(15,0.5*1.25);
 
         lateralRight(60,0.5*1.25);
 
