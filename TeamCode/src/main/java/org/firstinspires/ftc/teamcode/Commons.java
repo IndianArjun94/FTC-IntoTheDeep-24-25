@@ -400,7 +400,7 @@ public class Commons {
             frontLeftMotor.setPower(PIDx + PIDy);
             frontRightMotor.setPower(PIDx - PIDy);
             backLeftMotor.setPower(PIDx - PIDy);
-            backRightMotor.setPower(PIDx + PIDY);
+            backRightMotor.setPower(PIDx + PIDy);
 
 //            Updating Variables
             errorX = targetInchesX - odo.getPosition().getX(DistanceUnit.INCH);
