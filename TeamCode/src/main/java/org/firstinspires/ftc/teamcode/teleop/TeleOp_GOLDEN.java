@@ -206,13 +206,13 @@ public class TeleOp_GOLDEN extends OpMode {
             }
         }
 
-//        Viper Limit
-        if (viperSlideMotor.getCurrentPosition() < -2071) {
-            viperSlideMotor.setPower(0);
-            while (viperSlideMotor.getCurrentPosition() < -2071) {
-                viperSlideMotor.setPower(0.5);
-            }
-        }
+//      Viper Limit
+//        if (viperSlideMotor.getCurrentPosition() < -2071) {
+//            viperSlideMotor.setPower(0);
+//            while (viperSlideMotor.getCurrentPosition() < -2071) {
+//                viperSlideMotor.setPower(0.5);
+//            }
+//        }
 
 //        Claw Arm
         if (gamepad2.y) {
