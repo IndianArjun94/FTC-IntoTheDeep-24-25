@@ -14,12 +14,10 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import java.util.function.BooleanSupplier;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.Pose2D;
 import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
-import com.qualcomm.robotcore.hardware.configuration.annotations.I2cDeviceType;
 
 @DeviceProperties(
         name = "goBILDA® Pinpoint Odometry Computer",
@@ -110,7 +108,7 @@ public class Commons {
 
         imu.resetYaw();
 
-        double currentAngle = Commons.getYawAngle(); // The current angle
+        double currentAngle = getYawAngle(); // The current angle
         double targetAngle; // The final angle we want to be at when the turn is finished
 
         targetAngle = targetTurnAngle;
@@ -167,7 +165,7 @@ public class Commons {
 
         imu.resetYaw();
 
-        double currentAngle = Commons.getYawAngle(); // The current angle
+        double currentAngle = getYawAngle(); // The current angle
         double targetAngle; // The final angle we want to be at when the turn is finished
 
         targetAngle = -targetTurnAngle;
@@ -228,40 +226,30 @@ public class Commons {
 
         isBusy = true;
 
-        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.MM), AngleUnit.RADIANS, 0));
         odo.update();
+        imu.resetYaw();
 
-        double currentPosition = odo.getPosition().getX(DistanceUnit.INCH);
+        double currentPosition = getXPosition();
         double targetPosition = targetInches + currentPosition;
-
-//        double targetPositionY = odo.getPosition().getY(DistanceUnit.INCH);
-//        double errorY = currentPosition - targetPositionY;
 
         double error = targetPosition - currentPosition;
         double originalError = targetPosition - currentPosition;
 
-//        telemetry.addData("Target Pos: ", targetPosition + " ");
-//        telemetry.addData("Current Pos: ", currentPosition + " ");
-//        telemetry.addData("Error: ", error + " ");
-//        odo.update();
-//        telemetry.addData("X: ", odo.getPosition().getX(DistanceUnit.INCH) + " ");
-//        telemetry.update();
-//        sleep(5000);
+        double errorAngle = getYawAngle();
 
         double P;
         double I = 0.1;
         double D;
 
-//        double eP;
+        double aP;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
-        double Ki = 0.02f;
+        double Ki = 0.0025f;
         double Kd = 0.08f;
 
-//        double eKp = 0.3;
+        double aKp = 0.03;
 
         double maxI = 0.5f;
-
 
         while ((error <= -1 || error >= 1) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
             odo.update();
@@ -273,22 +261,26 @@ public class Commons {
             P = error/originalError * Kp; // Distance from target / original distance from target
             I += error/originalError * Ki;
             D = error/originalError * Kd;
-//            eP = errorY/targetPositionY * eKp; // How far to left or right from target line
+            aP = errorAngle * aKp; // Angle / Original Angle
 //            Powering Motors (Forward & Y Error)
             double PID = (P+I+D)*speed;
-//            double FeP = (eP)*speed;
+            if (PID > speed) {
+                PID = speed;
+            } else if (Math.abs(PID) > speed) {
+                PID = -speed;
+            }
+            double FaP = (aP)*speed;
 
-//            frontLeftMotor.setPower(PID);
-//            frontRightMotor.setPower(PID);
-//            backLeftMotor.setPower(PID);
-//            backRightMotor.setPower(PID);
+            telemetry.addData("aP: ", aP);
+            telemetry.update();
 
-            startForward(PID);
-//            Updating Variables
-            error = targetPosition - odo.getPosition().getX(DistanceUnit.INCH);
-//            errorY = currentPosition - targetPositionY;
-//            telemetry.addData("ErrorY: ", Double.toString(errorY));
-//            telemetry.update();
+            frontLeftMotor.setPower(PID + FaP);
+            frontRightMotor.setPower(PID - FaP);
+            backLeftMotor.setPower(PID + FaP);
+            backRightMotor.setPower(PID - FaP);
+
+            error = targetPosition - getXPosition();
+            errorAngle = getYawAngle();
         }
 
 
@@ -309,11 +301,11 @@ public class Commons {
 
         isBusy = true;
 
-        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.MM), AngleUnit.RADIANS, 0));
+//        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.MM), AngleUnit.RADIANS, 0));
         odo.update();
 
 //        int currentPosition = frontRightMotor.getCurrentPosition();
-        double currentPosition = odo.getPosition().getX(DistanceUnit.INCH);
+        double currentPosition = getXPosition();
         double targetPosition = currentPosition - (targetInches);
 
 //        double errorY = odo.getPosition().getY(DistanceUnit.INCH);
@@ -351,7 +343,7 @@ public class Commons {
 
             Commons.startBackward(PID);
 //            Updating Variables
-            error = targetPosition - odo.getPosition().getX(DistanceUnit.INCH);
+            error = targetPosition - getXPosition();
 //            errorY = odo.getPosition().getY(DistanceUnit.INCH);
         }
 
@@ -367,81 +359,71 @@ public class Commons {
 
         isBusy = true;
 
-        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.INCH), AngleUnit.RADIANS, 0));
+//        odo.setPosition(new Pose2D(DistanceUnit.MM, odo.getPosition().getX(DistanceUnit.MM), odo.getPosition().getY(DistanceUnit.MM), AngleUnit.RADIANS, 0));
+        odo.update();
 
-        double currentPositionX = odo.getPosition().getX(DistanceUnit.INCH);
-        double targetPositionX = currentPositionX + (targetInchesX);
+        double currentPositionX = getXPosition();
+        double targetPositionX = targetInchesX + currentPositionX;
 
-        double currentPositionY = odo.getPosition().getY(DistanceUnit.INCH);
-        double targetPositionY = currentPositionY + (targetInchesY);
+//        double targetPositionY = odo.getPosition().getY(DistanceUnit.INCH);
+//        double errorY = currentPosition - targetPositionY;
 
         double errorX = targetPositionX - currentPositionX;
-        double errorY = targetPositionY - currentPositionY;
+        double originalErrorX = targetPositionX - currentPositionX;
 
-        double originalErrorX = targetPositionY - currentPositionX;
-        double originalErrorY = targetPositionY - currentPositionY;
+//        telemetry.addData("Target Pos: ", targetPosition + " ");
+//        telemetry.addData("Current Pos: ", currentPosition + " ");
+//        telemetry.addData("Error: ", error + " ");
+//        odo.update();
+//        telemetry.addData("X: ", odo.getPosition().getX(DistanceUnit.INCH) + " ");
+//        telemetry.update();
+//        sleep(5000);
 
-        double Px; // Forward PID Controller
-        double Ix = 0;
-        double Dx;
+        double P;
+        double I = 0.1;
+        double D;
 
-        double Py; // Sideways PID Controller
-        double Iy = 0;
-        double Dy;
+//        double eP;
 
         double Kp = Commons.AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP;
-        double Ki = 0.001f;
+        double Ki = 0.02f;
         double Kd = 0.08f;
 
-        double maxI = 0.3f;
+//        double eKp = 0.3;
 
-        telemetry.addData("ErrorX: ", errorX + " ");
-        telemetry.addData("ErrorY: ", errorY + " ");
-        telemetry.update();
+        double maxI = 0.5f;
 
-        while (((errorX <= -1 || errorX >= 1)||(errorY <= -1 || errorY >= 1)) && opModeIsActive.getAsBoolean()) {
+
+        while ((errorX <= -1 || errorX >= 1) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
             odo.update();
 //            Checks
-            if (Math.abs(Ix) > maxI) {
-                Ix = maxI;
+            if (Math.abs(I) > maxI) {
+                I = maxI - errorX/originalErrorX * Ki;
             }
-//            PID Calculations for X (forward/backward)
-            Px = errorX/originalErrorX * Kp;
-            Ix += errorX/originalErrorX * Ki;
-            Dx = errorX/originalErrorX * Kd;
+//            PID Calculations
+            P = errorX/originalErrorX * Kp; // Distance from target / original distance from target
+            I += errorX/originalErrorX * Ki;
+            D = errorX/originalErrorX * Kd;
+//            eP = errorY/targetPositionY * eKp; // How far to left or right from target line
+//            Powering Motors (Forward & Y Error)
+            double PID = (P+I+D)*speed;
+//            double FeP = (eP)*speed;
 
-//            PID Calculations for Y (right/left)
-            Py = errorY/originalErrorY * Kp;
-            Iy += errorY/originalErrorY * Ki;
-            Dy = errorY/originalErrorY * Kd;
+//            frontLeftMotor.setPower(PID);
+//            frontRightMotor.setPower(PID);
+//            backLeftMotor.setPower(PID);
+//            backRightMotor.setPower(PID);
 
-//            Powering Motors
-            double PIDx;
-            double PIDy;
-
-            if (forwardFirst) {
-                PIDx = (Px+Ix+Dx)*speed;
-                PIDy = ((1-Py)+(1-Iy)+(1-Dy))*speed;
-            } else {
-                PIDx = ((1-Px)+(1-Ix)+(1-Dx))*speed;
-                PIDy = (Py+Iy+Dy)*speed;
-            }
-
-            frontLeftMotor.setPower(PIDx + PIDy);
-            frontRightMotor.setPower(PIDx - PIDy);
-            backLeftMotor.setPower(PIDx - PIDy);
-            backRightMotor.setPower(PIDx + PIDy);
-
-            telemetry.addData("PIDx: ", PIDx + " ");
-            telemetry.addData("PIDy: ", PIDy + " ");
-            telemetry.update();
-
+            startForward(PID);
 //            Updating Variables
-            errorX = targetInchesX - odo.getPosition().getX(DistanceUnit.INCH);
-            errorY = targetPositionY - odo.getPosition().getY(DistanceUnit.INCH);
+            errorX = targetPositionX - getXPosition();
+//            errorY = currentPosition - targetPositionY;
+//            telemetry.addData("ErrorY: ", Double.toString(errorY));
+//            telemetry.update();
         }
 
-//        Commons.lockMotors(75);
+
+        Commons.stopMotorsForward();
         Commons.stopMotors();
 
         isBusy = false;
@@ -706,13 +688,11 @@ public class Commons {
         stopMotors();
     }
 
-    @Deprecated
-    public static double getPositionX() {
-        return odo.getEncoderX();
+    public static double getXPosition() {
+        return odo.getEncoderX() / (19.89436789f * 25.4);
     }
 
-    @Deprecated
-    public static double getPositionY() {
-        return odo.getEncoderY();
+    public static double getYPosition() {
+        return odo.getEncoderY() / (19.89436789f * 25.4);
     }
 }
