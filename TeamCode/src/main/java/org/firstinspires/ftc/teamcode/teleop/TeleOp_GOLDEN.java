@@ -217,9 +217,9 @@ public class TeleOp_GOLDEN extends OpMode {
 //        Claw Arm
         if (gamepad2.y) {
             clawArm.setPower(-0.5);
-            clawArm.setTargetPosition(-760);
+            clawArm.setTargetPosition(-800);
             clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (clawArm.getCurrentPosition() < -730) {
+            if (clawArm.getCurrentPosition() < -750) {
                 clawArm.setPower(-0.2);
             }
         } else if (gamepad2.a) {

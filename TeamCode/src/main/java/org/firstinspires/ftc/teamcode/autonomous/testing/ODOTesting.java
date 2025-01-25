@@ -18,10 +18,6 @@ public class ODOTesting extends LinearOpMode {
         Commons.init(hardwareMap, this::opModeIsActive, telemetry);
         telemetry.setMsTransmissionInterval(250);
         waitForStart();
-        PID_forward(12, 0.5);
-        PID_rotateLeft(90, 0.5);
-        PID_forward(32, 0.5);
-        PID_rotateLeft(45, 0.5);
-        PID_forward(10, 0.8);
+        PID_goto(10, 10, true, 0.25);
     }
 }
