@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
+import static org.firstinspires.ftc.teamcode.Commons.PID_backward;
+import static org.firstinspires.ftc.teamcode.Commons.PID_forward;
 import static org.firstinspires.ftc.teamcode.Commons.PID_rotateRight;
 import static org.firstinspires.ftc.teamcode.Commons.armMotor;
 import static org.firstinspires.ftc.teamcode.Commons.backLeftMotor;
@@ -11,8 +13,6 @@ import static org.firstinspires.ftc.teamcode.Commons.frontRightMotor;
 import static org.firstinspires.ftc.teamcode.Commons.intakeServo;
 import static org.firstinspires.ftc.teamcode.Commons.lateralLeft;
 import static org.firstinspires.ftc.teamcode.Commons.lateralRight;
-import static org.firstinspires.ftc.teamcode.Commons.moveBackward;
-import static org.firstinspires.ftc.teamcode.Commons.moveForward;
 import static org.firstinspires.ftc.teamcode.Commons.viperSlideMotor;
 
 import static java.lang.String.valueOf;
@@ -51,18 +51,29 @@ public class Auton_Specimen extends LinearOpMode {
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-        moveForward(2,0.7);
+        PID_forward(2,0.7);
 
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setPower(1);
-        armMotor.setTargetPosition(325);
+        armMotor.setTargetPosition(1200);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() < 325 && opModeIsActive()) {
+        while (armMotor.getCurrentPosition() < 1200 && opModeIsActive()) {
             sleep(5);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
         armMotor.setPower(0.4);
 
+        frontLeftMotor.setPower(1);
+        frontRightMotor.setPower(1);
+        backRightMotor.setPower(1);
+        backLeftMotor.setPower(1);
+
+        sleep(100);
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
 
 
         frontLeftMotor.setPower(0.5);
@@ -78,7 +89,7 @@ public class Auton_Specimen extends LinearOpMode {
         backLeftMotor.setPower(0);
 
         clawArm.setPower(-0.8);
-        clawArm.setTargetPosition(-500);
+        clawArm.setTargetPosition(-510);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sleep(1000);
@@ -91,39 +102,45 @@ public class Auton_Specimen extends LinearOpMode {
         clawArm.setTargetPosition(-100);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        moveBackward(5, 1.25*0.9);
+        PID_backward(5, 1.25*0.9);
 
         PID_rotateRight(90,0.5*1.25);
 
-
-        moveForward(34,0.7*1.25);
+        PID_forward(34,0.7*1.25);
 
         lateralLeft(29,0.5*1.25);
 
-        moveForward(10,0.7*1.25);
+        PID_forward(10,0.7*1.25);
 
         lateralRight(46,0.5*1.25);
 
-        lateralLeft(10,0.5*1.25);
+        lateralLeft(11,0.5*1.25);
 
         PID_rotateRight(90,0.7*1.25);
 
-        lateralLeft(5,0.5*1.25);
-
         sleep(500);
 
-
-
-        sleep(200);
 
         clawArm.setPower(-0.5);
         clawArm.setTargetPosition(-770);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 
-        moveForward(8,0.5);
+        PID_forward(6,0.7);
 
-        moveForward(8,0.2);
+        PID_forward(3,0.2);
+
+        frontLeftMotor.setPower(0.2);
+        frontRightMotor.setPower(0.2);
+        backRightMotor.setPower(0.2);
+        backLeftMotor.setPower(0.2);
+
+        sleep(150);
+
+        frontLeftMotor.setPower(0);
+        frontRightMotor.setPower(0);
+        backRightMotor.setPower(0);
+        backLeftMotor.setPower(0);
 
         sleep(500);
 
@@ -137,12 +154,12 @@ public class Auton_Specimen extends LinearOpMode {
 
         sleep(1000);
 
-        moveBackward(10,0.3);
+        PID_backward(10,0.3);
 
         PID_rotateRight(85,0.5*1.25);
         PID_rotateRight(90,0.5*1.25);
 
-        lateralLeft(70,0.5*1.25);
+        lateralLeft(50,0.5*1.25);
 
         frontLeftMotor.setPower(0.5);
         frontRightMotor.setPower(0.5);
@@ -168,9 +185,10 @@ public class Auton_Specimen extends LinearOpMode {
 
         sleep(1000);
 
-        moveBackward(18,0.7*1.25);
+        PID_backward(18,0.7*1.25);
 
         lateralRight(60,0.5*1.25);
+
 
 //        clawArm.setPosition(0.4);
 
