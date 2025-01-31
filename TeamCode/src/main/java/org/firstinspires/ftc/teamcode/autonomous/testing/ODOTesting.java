@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.Commons.PID_backward;
 import static org.firstinspires.ftc.teamcode.Commons.PID_forward;
 import static org.firstinspires.ftc.teamcode.Commons.PID_goto;
 import static org.firstinspires.ftc.teamcode.Commons.PID_rotateLeft;
+import static org.firstinspires.ftc.teamcode.Commons.lateralLeft;
 import static org.firstinspires.ftc.teamcode.Commons.moveForward;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -18,6 +19,6 @@ public class ODOTesting extends LinearOpMode {
         Commons.init(hardwareMap, this::opModeIsActive, telemetry);
         telemetry.setMsTransmissionInterval(250);
         waitForStart();
-        PID_goto(10, 10, true, 0.25);
+        PID_goto(10, -20, true, 0.5f);
     }
 }

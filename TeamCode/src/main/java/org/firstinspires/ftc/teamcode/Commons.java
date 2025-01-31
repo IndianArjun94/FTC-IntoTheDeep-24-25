@@ -15,6 +15,7 @@ import java.util.function.BooleanSupplier;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.odometry.GoBildaPinpointDriver;
+import org.opencv.core.Mat;
 
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.configuration.annotations.DeviceProperties;
@@ -370,7 +371,7 @@ public class Commons {
         double targetPositionX = targetInchesX + currentPositionX;
 
         double currentPositionY = getYPosition();
-        double targetPositionY = targetInchesY +  currentPositionY;
+        double targetPositionY = targetInchesY + currentPositionY;
 
         double errorX = targetPositionX - currentPositionX;
         double originalErrorX = targetPositionX - currentPositionX;
@@ -400,34 +401,43 @@ public class Commons {
 
         double maxI = 0.5f;
 
+        telemetry.addData("targetInchesY: ", targetInchesY);
+        telemetry.addData("errorY: ", errorY);
+        telemetry.addData("originalErrorY*Kp: ", originalErrorY*Kp);
+        telemetry.update();
+        sleep(6000);
+
         while (((errorX <= -1 || errorX >= 1)||(errorY <= -1 || errorY >= 1)) && opModeIsActive.getAsBoolean()) { // As long as robot isn't within an inch of target pos, loop
             odo.update();
 //            Checks
             if (Math.abs(Ix) > maxI) {
-                Ix = maxI - errorX/originalErrorX * Ki;
+                Ix = maxI - errorX/Math.abs(originalErrorX * Ki);
             } if (Math.abs(Iy) > maxI) {
-                Iy = maxI - errorY/originalErrorY * Ki;
+                Iy = maxI - errorY/Math.abs(originalErrorY * Ki);
             }
 //            PID Calculations
-            Px = errorX/originalErrorX * Kp; // Distance from target / original distance from target
-            Ix += errorX/originalErrorX * Ki;
-            Dx = errorX/originalErrorX * Kd;
+            if (forwardFirst) {
+                Px = errorX/Math.abs(originalErrorX * Kp); // Distance from target / original distance from target
+            } else {
+                Px = (targetInchesX - errorX)/Math.abs(originalErrorX * Kp);
+            }
+            Ix += errorX/Math.abs(originalErrorX) * Ki;
+            Dx = errorX/Math.abs(originalErrorX) * Kd;
 
-            Py = errorY/originalErrorY * Kp;
-            Iy += errorY/originalErrorY * Ki;
-            Dy = errorY/originalErrorY * Kd;
+            if (forwardFirst) {
+                Py = (targetInchesY - errorY)/Math.abs(originalErrorY * Kp);
+            } else {
+                Py = errorY/Math.abs(originalErrorY * Kp);
+            }
+            Iy += errorY/Math.abs(originalErrorY * Ki);
+            Dy = errorY/Math.abs(originalErrorY * Kd);
 
 //            Powering Motors (Forward & Y Error)
             double PIDx = (Px+Ix+Dx)*speed;
-            double PIDy = (Py+Iy+Dy)*speed;
-            if (forwardFirst) {
-                PIDy = 1-PIDy;
-            } else {
-                PIDx = 1-PIDx;
-            }
+            double PIDy = (Py)*speed;
 
-            telemetry.addData("target: ", targetPositionY);
-            telemetry.addData("current: ", getYPosition());
+            telemetry.addData("errorY: ", errorY);
+            telemetry.addData("Py: ", Py*speed);
             telemetry.update();
 
             frontLeftMotor.setPower((PIDx - PIDy)*0.5);
@@ -443,7 +453,6 @@ public class Commons {
         }
 
 
-        Commons.stopMotorsForward();
         Commons.stopMotors();
 
         isBusy = false;
@@ -598,9 +607,11 @@ public class Commons {
         if (initWarning()==1) {return;}
 
         isBusy = true;
+        odo.update();
 
-        int targetPosition = (int)(inches * TPI_MOTOR) + backRightMotor.getCurrentPosition();
-        while (backRightMotor.getCurrentPosition() < targetPosition && opModeIsActive.getAsBoolean()) {
+        double targetPosition = (inches) + getYPosition();
+        while ((getYPosition() < targetPosition) && opModeIsActive.getAsBoolean()) {
+            odo.update();
             startLateralLeft(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
         Commons.stopMotorsLateralLeft();
@@ -613,9 +624,11 @@ public class Commons {
         if (initWarning()==1) {return;}
 
         isBusy = true;
+        odo.update();
 
-        int targetPosition = (int)(-inches * TPI_MOTOR) + backRightMotor.getCurrentPosition();
-        while (backRightMotor.getCurrentPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
+        double targetPosition = (-inches) + getYPosition();
+        while (getYPosition() > targetPosition && opModeIsActive.getAsBoolean()) {
+            odo.update();
             startLateralRight(speed*AUTON_MOTOR_MULTIPLIER_PERCENTAGE_CAP);
         }
         Commons.stopMotorsLateralRight();

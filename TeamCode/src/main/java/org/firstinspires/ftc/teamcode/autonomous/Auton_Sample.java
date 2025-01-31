@@ -25,20 +25,21 @@ public class Auton_Sample extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         Commons.init(hardwareMap, this::opModeIsActive, telemetry);
+        int viperOrigin = viperSlideMotor.getCurrentPosition();
         telemetry.setMsTransmissionInterval(100);
         waitForStart();
-        moveForward(12, 1);
+        PID_forward(12, 1);
         PID_rotateLeft(90, 1);
         PID_forward(32, 1);
         PID_rotateLeft(45, 1);
-        PID_forward(10, 0.8);
+        PID_forward(12, 0.8);
 
 //        Arm Up
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         armMotor.setPower(1);
-        armMotor.setTargetPosition(2000);
+        armMotor.setTargetPosition(1990);
         armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (armMotor.getCurrentPosition() < 2000 && opModeIsActive()) {
+        while (armMotor.getCurrentPosition() < 1990 && opModeIsActive()) {
             sleep(5);
         }
         armMotor.setTargetPosition(armMotor.getCurrentPosition());
@@ -47,44 +48,46 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2280);
+        viperSlideMotor.setTargetPosition(viperOrigin-2085);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2280 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>viperOrigin-2085 && opModeIsActive()) {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
-        intakeServo.setPower(0.3);
-        sleep(1500);
+        intakeServo.setPower(0.45);
+        sleep(2000);
         intakeServo.setPower(0);
 
 //        Viper Down
-        viperSlideMotor.setTargetPosition(100);
+        viperSlideMotor.setTargetPosition(viperOrigin - 250);
         viperSlideMotor.setPower(1);
-        while (viperSlideMotor.getCurrentPosition() < 100 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition() < viperOrigin - 250 && opModeIsActive()) {
             sleep(5);
         }
         viperSlideMotor.setPower(0);
 
 //        Arm Down
         armMotor.setPower(-0.4);
-        armMotor.setTargetPosition(80);
+        armMotor.setTargetPosition(-100);
 
 //        Continue Movement
         PID_rotateRight(45, 1);
-        PID_backward(10, 0.8);
+        PID_backward(14, 0.8);
         sleep(250);
-        lateralRight(32, 1);
+        lateralRight(24, 1);
 
 //        Pick Up Sample
-        viperSlideMotor.setTargetPosition(40);
+        sleep(500);
+//        viperSlideMotor.setTargetPosition(-220);
+//        viperSlideMotor.setPower(0.7);
         intakeServo.setPower(-0.5);
         PID_forward(12, 0.3);
         moveBackward(3, 0.35);
         intakeServo.setPower(0);
-        lateralLeft(26, 1);
-        PID_forward(8, 1);
-        PID_rotateLeft(50, 1);
-        PID_forward(7, 0.8);
+        lateralLeft(18, 1);
+        PID_forward(10, 1);
+        PID_rotateLeft(40, 0.8);
+        PID_forward(4, 0.8);
 
 //        Arm Up
         armMotor.setPower(1);
@@ -99,44 +102,43 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2280);
+        viperSlideMotor.setTargetPosition(viperOrigin-2085);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2280 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>viperOrigin-2085 && opModeIsActive()) {
             sleep(5);
-            print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
         intakeServo.setPower(0.4);
         sleep(1500);
         intakeServo.setPower(0);
 
 //        Viper Down
-        viperSlideMotor.setTargetPosition(100);
+        viperSlideMotor.setTargetPosition(viperOrigin - 100);
         viperSlideMotor.setPower(1);
-        while (viperSlideMotor.getCurrentPosition() < 100 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition() < viperOrigin - 100 && opModeIsActive()) {
             sleep(5);
         }
         viperSlideMotor.setPower(0);
 
 //        Arm Down
         armMotor.setPower(-0.4);
-        armMotor.setTargetPosition(80);
+        armMotor.setTargetPosition(-80);
 
 //        Continue Movement
         PID_rotateRight(45, 1);
-        PID_backward(7, 1);
+        PID_backward(5, 1);
         sleep(350);
-        lateralRight(29, 1);
+        lateralRight(24, 1);
 
 //        Pick Up Sample
-        viperSlideMotor.setTargetPosition(40);
+        viperSlideMotor.setTargetPosition(-220);
         intakeServo.setPower(-0.5);
         PID_forward(17, 0.3);
-        moveBackward(6, 0.35);
+        moveBackward(6, 0.5);
         intakeServo.setPower(0);
-        lateralLeft(26, 1);
-//        moveForward(8, 0.8);
+        lateralLeft(19, 1);
+        PID_forward(2, 0.8);
         PID_rotateLeft(45, 1);
-        PID_forward(7, 0.8);
+        PID_forward(5, 0.8);
 
 //        Arm Up
         armMotor.setPower(1);
@@ -151,9 +153,9 @@ public class Auton_Sample extends LinearOpMode {
 //        Viper Up
         viperSlideMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         viperSlideMotor.setPower(-0.95);
-        viperSlideMotor.setTargetPosition(-2280);
+        viperSlideMotor.setTargetPosition(viperOrigin-2085);
         viperSlideMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while (viperSlideMotor.getCurrentPosition()>-2280 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition()>viperOrigin-2085 && opModeIsActive()) {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
@@ -162,9 +164,9 @@ public class Auton_Sample extends LinearOpMode {
         intakeServo.setPower(0);
 
 //        Viper Down
-        viperSlideMotor.setTargetPosition(100);
+        viperSlideMotor.setTargetPosition(viperOrigin - 100);
         viperSlideMotor.setPower(1);
-        while (viperSlideMotor.getCurrentPosition() < 100 && opModeIsActive()) {
+        while (viperSlideMotor.getCurrentPosition() < viperOrigin - 100 && opModeIsActive()) {
             sleep(5);
         }
         viperSlideMotor.setPower(0);
