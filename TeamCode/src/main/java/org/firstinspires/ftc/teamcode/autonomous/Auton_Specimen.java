@@ -122,7 +122,7 @@ public class Auton_Specimen extends LinearOpMode {
 
 
         clawArm.setPower(-0.5);
-        clawArm.setTargetPosition(-770);
+        clawArm.setTargetPosition(-720);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 
