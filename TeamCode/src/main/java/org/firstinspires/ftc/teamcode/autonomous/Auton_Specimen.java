@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Commons;
 
-@Autonomous(name = "Auton_Specimen", group = "ftc")
+@Autonomous(name = "Auton SPECIMEN", group = "Auton FINAL")
 public class Auton_Specimen extends LinearOpMode {
 
     /**

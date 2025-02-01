@@ -35,6 +35,7 @@ public class TeleOp_GOLDEN extends OpMode {
     public boolean armMotorUnlocked = false;
     public float armIdlePosition = 0;
 
+    public boolean armSoftLockEnabled = true;
 
     public void print(String value, String value1) {
         telemetry.addData(value, value1);
@@ -134,7 +135,7 @@ public class TeleOp_GOLDEN extends OpMode {
 
             //sleep for 1500 (try/catch)
             try {
-                sleep(2000);
+                sleep(2400);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -157,9 +158,25 @@ public class TeleOp_GOLDEN extends OpMode {
 
 //        Robot Arm
         if (gamepad2.dpad_up) {
-            armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            armMotor.setPower(ARMROT_SPEED_CAP);
-            armMotorUnlocked = true;
+            if (armMotor.getCurrentPosition()<2280) {
+                armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                armMotor.setPower(ARMROT_SPEED_CAP);
+            } else {
+                if (!armSoftLockEnabled) {
+                    armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                    armMotor.setPower(ARMROT_SPEED_CAP);
+                } else {
+                    armMotor.setPower(0);
+                }
+            }
+            if (armMotor.getCurrentPosition()>2280 && armSoftLockEnabled) {
+                armMotorUnlocked = false;
+                armMotor.setTargetPosition(2280);
+                armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                armMotor.setPower(-0.4);
+            } else {
+                armMotorUnlocked = true;
+            }
         } else if (gamepad2.dpad_down) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(-ARMROT_SPEED_CAP);
@@ -174,8 +191,14 @@ public class TeleOp_GOLDEN extends OpMode {
             }
         }
 
+        if (gamepad2.dpad_left) {
+            armSoftLockEnabled = false;
+        } else if (gamepad2.dpad_right) {
+            armSoftLockEnabled = true;
+        }
+
 //        Viper Slide
-        if (gamepad2.right_trigger != 0) { // Extend
+        if (gamepad2.right_trigger != 0 && armSoftLockEnabled) { // Extend
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(-gamepad2.right_trigger);
         } else if (gamepad2.left_trigger != 0) { // Retract
