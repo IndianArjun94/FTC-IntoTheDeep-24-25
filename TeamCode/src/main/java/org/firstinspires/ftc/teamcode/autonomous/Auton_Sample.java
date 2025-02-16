@@ -30,9 +30,9 @@ public class Auton_Sample extends LinearOpMode {
         waitForStart();
         PID_forward(12, 1);
         PID_rotateLeft(90, 1);
-        PID_forward(32, 1);
+        PID_forward(8, 1);
         PID_rotateLeft(45, 1);
-        PID_forward(12, 0.8);
+        PID_forward(11, 0.8);
 
 //        Arm Up
         armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -74,17 +74,18 @@ public class Auton_Sample extends LinearOpMode {
         PID_rotateRight(45, 1);
         PID_backward(14, 0.8);
         sleep(250);
-        lateralRight(24, 1);
+        lateralRight(22, 1);
 
 //        Pick Up Sample
         sleep(500);
 //        viperSlideMotor.setTargetPosition(-220);
 //        viperSlideMotor.setPower(0.7);
-        intakeServo.setPower(-0.5);
+        intakeServo.setPower(-0.3);
         PID_forward(12, 0.3);
         moveBackward(3, 0.35);
         intakeServo.setPower(0);
-        lateralLeft(18, 1);
+        armMotor.setTargetPosition(0);
+        lateralLeft(16, 1);
         PID_forward(10, 1);
         PID_rotateLeft(40, 0.8);
         PID_forward(4, 0.8);
@@ -107,7 +108,7 @@ public class Auton_Sample extends LinearOpMode {
         while (viperSlideMotor.getCurrentPosition()>viperOrigin-2085 && opModeIsActive()) {
             sleep(5);
         }
-        intakeServo.setPower(0.4);
+        intakeServo.setPower(0.65);
         sleep(1500);
         intakeServo.setPower(0);
 
@@ -131,10 +132,11 @@ public class Auton_Sample extends LinearOpMode {
 
 //        Pick Up Sample
         viperSlideMotor.setTargetPosition(-220);
-        intakeServo.setPower(-0.5);
+        intakeServo.setPower(-0.2);
         PID_forward(17, 0.3);
         moveBackward(6, 0.5);
         intakeServo.setPower(0);
+        armMotor.setTargetPosition(0);
         lateralLeft(19, 1);
         PID_forward(2, 0.8);
         PID_rotateLeft(45, 1);
@@ -159,7 +161,7 @@ public class Auton_Sample extends LinearOpMode {
             sleep(5);
             print("Viper Slide Position", Integer.toString(viperSlideMotor.getCurrentPosition()));
         }
-        intakeServo.setPower(0.4);
+        intakeServo.setPower(0.65);
         sleep(1500);
         intakeServo.setPower(0);
 

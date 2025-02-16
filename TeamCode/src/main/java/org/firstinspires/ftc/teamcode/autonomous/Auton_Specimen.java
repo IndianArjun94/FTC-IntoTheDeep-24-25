@@ -23,7 +23,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Commons;
 
-@Autonomous(name = "Auton_Specimen", group = "ftc")
+@Autonomous(name = "Auton SPECIMEN", group = "Auton FINAL")
 public class Auton_Specimen extends LinearOpMode {
 
     /**
@@ -122,7 +122,7 @@ public class Auton_Specimen extends LinearOpMode {
 
 
         clawArm.setPower(-0.5);
-        clawArm.setTargetPosition(-770);
+        clawArm.setTargetPosition(-720);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 

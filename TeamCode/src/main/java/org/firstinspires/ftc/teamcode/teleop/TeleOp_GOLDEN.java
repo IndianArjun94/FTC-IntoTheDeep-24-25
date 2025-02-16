@@ -35,6 +35,7 @@ public class TeleOp_GOLDEN extends OpMode {
     public boolean armMotorUnlocked = false;
     public float armIdlePosition = 0;
 
+    public boolean armSoftLockEnabled = true;
 
     public void print(String value, String value1) {
         telemetry.addData(value, value1);
@@ -134,7 +135,7 @@ public class TeleOp_GOLDEN extends OpMode {
 
             //sleep for 1500 (try/catch)
             try {
-                sleep(2000);
+                sleep(2400);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
@@ -143,7 +144,7 @@ public class TeleOp_GOLDEN extends OpMode {
             armIdlePosition = armMotor.getCurrentPosition();
             armMotor.setTargetPosition((int)armIdlePosition);
             armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            armMotor.setPower(0.4);
+            armMotor.setPower(0.6);
 
             frontLeftMotor.setPower(0);
             frontRightMotor.setPower(0);
@@ -156,6 +157,7 @@ public class TeleOp_GOLDEN extends OpMode {
         }
 
 //        Robot Arm
+
         if (gamepad2.dpad_up) {
             armMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             armMotor.setPower(ARMROT_SPEED_CAP);
@@ -170,12 +172,32 @@ public class TeleOp_GOLDEN extends OpMode {
                 armIdlePosition = armMotor.getCurrentPosition();
                 armMotor.setTargetPosition((int)armIdlePosition);
                 armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                armMotor.setPower(0.4);
+                armMotor.setPower(0.8);
             }
         }
 
+        if (gamepad2.dpad_left) {
+            armSoftLockEnabled = false;
+        } else if (gamepad2.dpad_right) {
+            armSoftLockEnabled = true;
+        }
+
+        if (armMotor.getCurrentPosition()>2080 && armSoftLockEnabled) {
+            armMotorUnlocked = false;
+            armMotor.setTargetPosition(2080);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armMotor.setPower(-0.4);
+        } else if (armMotor.getCurrentPosition()>2454 && !armSoftLockEnabled){
+            armMotorUnlocked = false;
+            armMotor.setTargetPosition(2454);
+            armMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            armMotor.setPower(-0.4);
+        } else {
+            armMotorUnlocked = true;
+        }
+
 //        Viper Slide
-        if (gamepad2.right_trigger != 0) { // Extend
+        if (gamepad2.right_trigger != 0 && armSoftLockEnabled) { // Extend
             viperSlideMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             viperSlideMotor.setPower(-gamepad2.right_trigger);
         } else if (gamepad2.left_trigger != 0) { // Retract
@@ -217,9 +239,9 @@ public class TeleOp_GOLDEN extends OpMode {
 //        Claw Arm
         if (gamepad2.y) {
             clawArm.setPower(-0.5);
-            clawArm.setTargetPosition(-800);
+            clawArm.setTargetPosition(-740);
             clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (clawArm.getCurrentPosition() < -750) {
+            if (clawArm.getCurrentPosition() < -690) {
                 clawArm.setPower(-0.2);
             }
         } else if (gamepad2.a) {
