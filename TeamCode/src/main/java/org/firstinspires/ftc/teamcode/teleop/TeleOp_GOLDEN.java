@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.R;
 
 @TeleOp(name = "TeleOp GOLDEN")
 public class TeleOp_GOLDEN extends OpMode {
-    public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.8F;
+    public final float MOTOR_MULTIPLIER_PERCENTAGE_CAP = 0.55F;
     public final float ARMROT_SPEED_CAP = 0.7F;
 
     public DcMotor frontLeftMotor;
@@ -239,22 +239,34 @@ public class TeleOp_GOLDEN extends OpMode {
 //        Claw Arm
         if (gamepad2.y) {
             clawArm.setPower(-0.5);
-            clawArm.setTargetPosition(-740);
+            clawArm.setTargetPosition(-885);
             clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            if (clawArm.getCurrentPosition() < -690) {
+            if (clawArm.getCurrentPosition() < -835) {
                 clawArm.setPower(-0.2);
             }
         } else if (gamepad2.a) {
             clawArm.setPower(0.5);
-            clawArm.setTargetPosition(0);
+            clawArm.setTargetPosition(-230);
             clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
 
+        //Claw Adjustment
+        if (gamepad2.left_stick_y > 0.9) {
+            clawArm.setPower(0.1);
+            clawArm.setTargetPosition(clawArm.getCurrentPosition()-25);
+            clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        } else if (gamepad2.left_stick_y < -0.9 && clawArm.getCurrentPosition() < 0) {
+            clawArm.setPower(-0.1);
+            clawArm.setTargetPosition(clawArm.getCurrentPosition()+25);
+            clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        }
+
+
 //        Claw
         if (gamepad2.b && !gamepad2.start) {
-            claw.setPosition(0.5);
+            claw.setPosition(0.5); //close
         } else if (gamepad2.x) {
-            claw.setPosition(0.3);
+            claw.setPosition(0.3); //open
         }
 
         telemetry.update();
