@@ -89,18 +89,20 @@ public class Auton_Specimen extends LinearOpMode {
         backLeftMotor.setPower(0);
 
         clawArm.setPower(-0.8);
-        clawArm.setTargetPosition(-510);
+        clawArm.setTargetPosition(-650);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        sleep(1000);
-
-        claw.setPosition(0.3);
 
         sleep(500);
 
+        claw.setPosition(0.3);
+
+        sleep(400);
+
         clawArm.setPower(0.4);
-        clawArm.setTargetPosition(-100);
+        clawArm.setTargetPosition(-230);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        sleep(600);
 
         PID_backward(5, 1.25*0.9);
 
@@ -110,7 +112,7 @@ public class Auton_Specimen extends LinearOpMode {
 
         lateralLeft(29,0.5*1.25);
 
-        PID_forward(10,0.7*1.25);
+        PID_forward(9,0.7*1.25);
 
         lateralRight(46,0.5*1.25);
 
@@ -120,15 +122,18 @@ public class Auton_Specimen extends LinearOpMode {
 
         sleep(500);
 
+        claw.setPosition(0.5);
 
         clawArm.setPower(-0.5);
-        clawArm.setTargetPosition(-720);
+        clawArm.setTargetPosition(-875);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         sleep(1000);
 
+        claw.setPosition(0.3);
+
         PID_forward(6,0.7);
 
-        PID_forward(3,0.2);
+        PID_forward(3.5,0.2);
 
         frontLeftMotor.setPower(0.2);
         frontRightMotor.setPower(0.2);
@@ -149,7 +154,7 @@ public class Auton_Specimen extends LinearOpMode {
         sleep(500);
 
         clawArm.setPower(0.5);
-        clawArm.setTargetPosition(0);
+        clawArm.setTargetPosition(-230);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sleep(1000);
@@ -174,13 +179,13 @@ public class Auton_Specimen extends LinearOpMode {
         backLeftMotor.setPower(0);
 
         clawArm.setPower(-0.7);
-        clawArm.setTargetPosition(-740);
+        clawArm.setTargetPosition(-650);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sleep(1000);
 
         clawArm.setPower(0.4);
-        clawArm.setTargetPosition(-100);
+        clawArm.setTargetPosition(-230);
         clawArm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         sleep(1000);
